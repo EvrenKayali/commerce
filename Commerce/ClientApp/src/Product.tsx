@@ -24,8 +24,11 @@ export const Product: React.FC = () => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <Stack width="900px" margin="0 auto" spacing={2}>
+      <form
+        onSubmit={methods.handleSubmit(onSubmit)}
+        style={{ width: "900px", margin: "0 auto" }}
+      >
+        <Stack margin="0 auto" spacing={2}>
           <Typography variant="h5">Add Product</Typography>
           <BasicInfo />
           <Images />

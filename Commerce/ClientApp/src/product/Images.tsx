@@ -1,4 +1,13 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  ImageList,
+  ImageListItem,
+  Typography,
+  Box,
+  Grid,
+} from "@mui/material";
+import { minWidth } from "@mui/system";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
@@ -10,6 +19,7 @@ export default function Images() {
     accept: {
       "image/*": [],
     },
+    noClick: true,
     onDrop: (acceptedFiles) => {
       const newImages = acceptedFiles.map((file) =>
         Object.assign(file, {
@@ -29,19 +39,25 @@ export default function Images() {
         </Typography>
         <div {...getRootProps()} style={{ border: "1px dashed #ccc" }}>
           <input {...getInputProps()} {...register("images")} />
+          <Grid p="1rem" container spacing={2}>
+            {images?.map((image, idx) => {
+              return (
+                <Grid item key={idx}>
+                  <img
+                    src={image.preview}
+                    alt=""
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
           <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
-
-        {images?.map((image, idx) => {
-          return (
-            <img
-              key={idx}
-              src={image.preview}
-              alt=""
-              style={{ width: "200px", height: "200px", objectFit: "cover" }}
-            />
-          );
-        })}
       </CardContent>
     </Card>
   );
