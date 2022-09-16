@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 export default function BasicInfo() {
   const { register } = useFormContext();
   return (
-    <Card sx={{ width: "50rem", marginBottom: "1rem" }}>
+    <Card>
       <CardContent>
         <Box mb="1rem">
           <Typography mb="0.25rem">Title</Typography>

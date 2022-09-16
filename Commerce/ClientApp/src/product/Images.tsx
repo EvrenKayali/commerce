@@ -18,7 +18,7 @@ export default function Images() {
     },
   });
   return (
-    <Card sx={{ width: "50rem", marginBottom: "1rem" }}>
+    <Card>
       <CardContent>
         <Typography variant="h5" mb="0.25rem">
           Images

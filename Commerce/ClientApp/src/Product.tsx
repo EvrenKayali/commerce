@@ -1,4 +1,4 @@
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Button, Stack } from "@mui/material";
 import { useForm, FormProvider } from "react-hook-form";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
@@ -8,6 +8,7 @@ import Variants from "./product/Variants";
 type FormValues = {
   title: string;
   description: string;
+  images: FileList;
   variants: {
     name: string;
     value: string;
@@ -24,13 +25,13 @@ export const Product: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <Box width="900px" margin="0 auto">
+        <Stack width="900px" margin="0 auto" spacing={2}>
           <Typography variant="h5">Add Product</Typography>
           <BasicInfo />
           <Images />
           <Pricing />
           <Variants />
-        </Box>
+        </Stack>
         <Button type="submit">Save</Button>
       </form>
     </FormProvider>

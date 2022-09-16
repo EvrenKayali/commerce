@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography, InputBase } from "@mui/material";
 export default function Pricing() {
   return (
-    <Card sx={{ width: "50rem", marginBottom: "1rem" }}>
+    <Card>
       <CardContent>
         <Typography variant="h5" mb="0.25rem">
           Pricing
