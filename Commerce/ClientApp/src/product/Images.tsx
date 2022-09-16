@@ -1,13 +1,4 @@
-import {
-  Card,
-  CardContent,
-  ImageList,
-  ImageListItem,
-  Typography,
-  Box,
-  Grid,
-} from "@mui/material";
-import { minWidth } from "@mui/system";
+import { Card, CardContent, Typography, Grid } from "@mui/material";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";

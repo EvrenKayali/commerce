@@ -20,7 +20,28 @@ export const Product: React.FC = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = (data: FormValues) => console.log(data);
+  const onSubmit = async (data: FormValues) => {
+    const formData = new FormData();
+
+    Array.from(data.images).forEach((img) => {
+      formData.append("images", img);
+    });
+
+    await fetch("Product/images", {
+      method: "POST",
+      body: formData,
+    }).then((res) => res.json());
+
+    const { images, ...productDataWithoutImages } = data;
+
+    await fetch("Product/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productDataWithoutImages),
+    }).then((res) => res.json());
+  };
 
   return (
     <FormProvider {...methods}>

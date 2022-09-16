@@ -1,8 +1,14 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using System.Reflection;
+using Azure.Storage.Blobs;
+using MediatR;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped(_ => new BlobServiceClient(builder.Configuration.GetConnectionString("StorageAccount")));
 
 var app = builder.Build();
 
@@ -22,7 +28,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("index.html");;
+app.MapFallbackToFile("index.html"); ;
 
 app.Run();
 
