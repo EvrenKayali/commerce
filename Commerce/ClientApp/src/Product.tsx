@@ -1,5 +1,7 @@
 import { Typography, Button, Stack } from "@mui/material";
+import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { addProduct, getProduct, uploadFileImages } from "./api/api";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import Pricing from "./product/Pricing";
@@ -20,27 +22,19 @@ export const Product: React.FC = () => {
     mode: "onBlur",
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getProduct(1);
+    };
+
+    fetchData();
+  }, []);
   const onSubmit = async (data: FormValues) => {
-    const formData = new FormData();
-
-    Array.from(data.images).forEach((img) => {
-      formData.append("images", img);
-    });
-
-    await fetch("Product/images", {
-      method: "POST",
-      body: formData,
-    }).then((res) => res.json());
+    await uploadFileImages(data.images);
 
     const { images, ...productDataWithoutImages } = data;
 
-    await fetch("Product/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productDataWithoutImages),
-    }).then((res) => res.json());
+    await addProduct(productDataWithoutImages);
   };
 
   return (
@@ -51,6 +45,10 @@ export const Product: React.FC = () => {
       >
         <Stack margin="0 auto" spacing={2}>
           <Typography variant="h5">Add Product</Typography>
+          {/* <img
+            src="http://127.0.0.1:10000/devstoreaccount1/products/title/3K28Store_1daba9ceba57054246aa5680fae63d04.jpeg"
+            alt=""
+          /> */}
           <BasicInfo />
           <Images />
           <Pricing />
