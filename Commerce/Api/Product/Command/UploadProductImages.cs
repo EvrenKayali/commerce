@@ -1,7 +1,7 @@
 using Azure.Storage.Blobs;
 using MediatR;
 
-namespace Commerce.Api.Product.Command;
+namespace Commerce.Api.ProductApi.Command;
 public static class UploadProductImages
 {
     public record Request : IRequest<Unit>

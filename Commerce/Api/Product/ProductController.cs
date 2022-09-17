@@ -1,8 +1,8 @@
-using Commerce.Api.Product.Command;
+using Commerce.Api.ProductApi.Command;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Commerce.Api.Product;
+namespace Commerce.Api.ProductApi;
 
 [ApiController]
 [Route("[controller]")]

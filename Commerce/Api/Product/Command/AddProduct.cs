@@ -1,7 +1,8 @@
-using Azure.Storage.Blobs;
+using Commerce.Data;
 using MediatR;
+using Commerce.Data.Entites;
 
-namespace Commerce.Api.Product.Command;
+namespace Commerce.Api.ProductApi.Command;
 
 public static class AddProduct
 {
@@ -13,17 +14,23 @@ public static class AddProduct
 
     public class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly BlobServiceClient _blobServiceClient;
+        private readonly CommerceDbContext _db;
 
-        public Handler(BlobServiceClient blobServiceClient)
+        public Handler(CommerceDbContext db)
         {
-            _blobServiceClient = blobServiceClient;
+            _db = db;
         }
-
-
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            var a = request;
+            var product = new Product
+            {
+                Title = request.Title!,
+                Description = request.Description!
+            };
+
+            await _db.Products.AddAsync(product, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+
             return Unit.Value;
         }
     }
