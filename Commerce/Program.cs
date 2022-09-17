@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Azure.Storage.Blobs;
+using Commerce.Data;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped(_ => new BlobServiceClient(builder.Configuration.GetConnectionString("StorageAccount")));
+builder.Services.AddDbContext<CommerceDbContext>(options =>
+  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
