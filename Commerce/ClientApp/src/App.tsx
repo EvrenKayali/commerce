@@ -1,29 +1,30 @@
-import { Box } from "@mui/material";
-import { Routes, Route, Link } from "react-router-dom";
+import { Container, Grid } from "@mui/material";
+import { Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import { Product } from "./Product";
 import Products from "./Products";
+import NavBar from "./layout/NavBar";
+import Header from "./layout/Header";
 
 function App() {
   return (
     <>
-      <Box
-        mb="2rem"
-        sx={{
-          "& > *": {
-            marginRight: "1rem",
-          },
-        }}
-      >
-        <Link to="/">Home</Link>
-        <Link to="/products">Products</Link>
-      </Box>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/product/:productId" element={<Product />} />
-      </Routes>
+      <Header />
+      <Grid container mt="2rem">
+        <Grid item md={1}>
+          <NavBar />
+        </Grid>
+        <Grid item md={5}>
+          <Container>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/product" element={<Product />} />
+              <Route path="/product/:productId" element={<Product />} />
+            </Routes>
+          </Container>
+        </Grid>
+      </Grid>
     </>
   );
 }

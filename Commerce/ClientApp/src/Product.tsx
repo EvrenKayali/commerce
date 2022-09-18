@@ -1,4 +1,4 @@
-import { Typography, Button, Stack } from "@mui/material";
+import { Typography, Button, Stack, Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -34,12 +34,14 @@ function Form({ formData }: { formData?: FormValues }) {
   };
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        style={{ width: "900px", margin: "0 auto" }}
-      >
-        <Stack margin="0 auto" spacing={2}>
-          <Typography variant="h5">Add Product</Typography>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <Stack spacing={2}>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h5">Add Product</Typography>
+            <Button variant="contained" type="submit">
+              Save
+            </Button>
+          </Box>
           <BasicInfo />
           <Images />
           <Pricing />

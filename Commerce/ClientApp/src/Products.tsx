@@ -1,14 +1,15 @@
 import {
   Box,
   Button,
-  Container,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -25,45 +26,45 @@ export default function Products() {
     fetchData();
   }, []);
   return (
-    <>
-      <Container>
-        <Paper>
-          <Box display="flex" justifyContent="flex-end" p=".5rem">
-            <Button
-              component={Link}
-              to="/product"
-              variant="contained"
-              color="primary"
-            >
-              Add New
-            </Button>
-          </Box>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
+    <Stack spacing={2}>
+      <Typography variant="h5">Products</Typography>
+
+      <Paper>
+        <Box display="flex" justifyContent="flex-end" p=".5rem">
+          <Button
+            component={Link}
+            to="/product"
+            variant="contained"
+            color="primary"
+          >
+            Add New
+          </Button>
+        </Box>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <strong>Title</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Description</strong>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {products?.map((p) => (
+                <TableRow key={p.id}>
                   <TableCell>
-                    <strong>Title</strong>
+                    <Link to={`/product/${p.id}`}>{p.title}</Link>
                   </TableCell>
-                  <TableCell>
-                    <strong>Description</strong>
-                  </TableCell>
+                  <TableCell>{p.description}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {products?.map((p) => (
-                  <TableRow key={p.id}>
-                    <TableCell>
-                      <Link to={`/product/${p.id}`}>{p.title}</Link>
-                    </TableCell>
-                    <TableCell>{p.description}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Container>
-    </>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </Stack>
   );
 }
