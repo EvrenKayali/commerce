@@ -49,6 +49,9 @@ export default function Products() {
                 <TableCell>
                   <strong>Description</strong>
                 </TableCell>
+                <TableCell>
+                  <strong>Slug</strong>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -58,6 +61,7 @@ export default function Products() {
                     <Link to={`/product/${p.id}`}>{p.title}</Link>
                   </TableCell>
                   <TableCell>{p.description}</TableCell>
+                  <TableCell>{p.slug}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

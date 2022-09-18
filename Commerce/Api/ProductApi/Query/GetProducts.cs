@@ -7,7 +7,7 @@ public static class GetProducts
 {
     public record Request : IRequest<List<Response>> { }
 
-    public record Response(int Id, string Title, string Description);
+    public record Response(int Id, string Title, string Description, string Slug);
 
     public class Handler : IRequestHandler<Request, List<Response>>
     {
@@ -20,7 +20,7 @@ public static class GetProducts
 
         public async Task<List<Response>> Handle(Request request, CancellationToken cancellationToken)
         {
-            return await _db.Products.Select(p => new Response(p.Id, p.Title, p.Description)).ToListAsync(cancellationToken);
+            return await _db.Products.Select(p => new Response(p.Id, p.Title, p.Description, p.Slug)).ToListAsync(cancellationToken);
         }
     }
 }

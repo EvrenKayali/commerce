@@ -7,7 +7,6 @@ import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import Pricing from "./product/Pricing";
 import Variants from "./product/Variants";
-import { uid } from "./utils/uid";
 
 type FormValues = {
   id: number;
@@ -21,19 +20,18 @@ type FormValues = {
   }[];
 };
 
-function Form({ formData }: { formData?: FormValues }) {
+function Form({ formData, header }: { formData?: FormValues; header: string }) {
   const methods = useForm<FormValues>({
     mode: "onBlur",
     defaultValues: formData,
   });
 
   const onSubmit = async (data: FormValues) => {
-    const folder = uid();
-    await uploadFileImages(data.images, folder);
+    await uploadFileImages(data.images, data.slug);
 
     const { images, ...productDataWithoutImages } = data;
 
-    await addProduct({ ...productDataWithoutImages, folder });
+    await addProduct({ ...productDataWithoutImages });
   };
   return (
     <Box maxWidth="md">
@@ -41,7 +39,7 @@ function Form({ formData }: { formData?: FormValues }) {
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Stack spacing={2}>
             <Box display="flex" justifyContent="space-between">
-              <Typography variant="h5">Add Product</Typography>
+              <Typography variant="h5">{header}</Typography>
               <Button variant="contained" type="submit">
                 Save
               </Button>
@@ -75,5 +73,7 @@ export const Product: React.FC = () => {
     }
   }, [productId]);
 
-  return vals ? <Form formData={vals} /> : null;
+  return vals ? (
+    <Form formData={vals} header={productId ? "Edit Product" : "Add Product"} />
+  ) : null;
 };

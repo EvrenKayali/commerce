@@ -2,7 +2,7 @@ export interface Product {
   id: number;
   title: string;
   description: string;
-  folder?: string;
+  slug?: string;
 }
 
 export const addProduct = async (product: Product) => {
@@ -55,7 +55,7 @@ export const getProduct = async (id: number) => {
 
 export const getProducts = async () => {
   try {
-    return await (await fetch(`Products`)).json();
+    return (await (await fetch(`Products`)).json()) as Product[];
   } catch (err) {
     console.log(err);
   }

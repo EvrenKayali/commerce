@@ -10,7 +10,6 @@ public static class AddProduct
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public string? Folder { get; set; }
         public string? Slug { get; set; }
     }
 
@@ -28,7 +27,6 @@ public static class AddProduct
             {
                 Title = request.Title!,
                 Description = request.Description!,
-                MediaFolder = request.Folder!,
                 Slug = request.Slug!
             };
 

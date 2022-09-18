@@ -15,6 +15,8 @@ public static class GetProduct
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
+
+        public string? Slug { get; set; }
     }
 
     public class Handler : IRequestHandler<Request, Response>
@@ -36,7 +38,8 @@ public static class GetProduct
             {
                 Id = product.Id,
                 Title = product.Title,
-                Description = product.Description
+                Description = product.Description,
+                Slug = product.Slug
             };
         }
     }
