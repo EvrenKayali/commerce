@@ -9,6 +9,7 @@ import Pricing from "./product/Pricing";
 import Variants from "./product/Variants";
 
 type FormValues = {
+  id: number;
   title: string;
   description: string;
   images?: FileList;
@@ -56,15 +57,14 @@ export const Product: React.FC = () => {
   const productId = parseInt(params.productId as string);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await getProduct(1);
+    const fetchData = async (productId: number) => {
+      const result = await getProduct(productId);
       setVals(result);
     };
     if (productId) {
-      console.log(productId);
-      fetchData();
+      fetchData(productId);
     } else {
-      setVals({ title: "", description: "" });
+      setVals({ title: "", description: "", id: 0 });
     }
   }, [productId]);
 

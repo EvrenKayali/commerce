@@ -1,4 +1,5 @@
 export interface Product {
+  id: number;
   title: string;
   description: string;
 }
@@ -43,6 +44,14 @@ export const uploadFileImages = async (images?: FileList) => {
 export const getProduct = async (id: number) => {
   try {
     return await (await fetch(`Product/${id}`)).json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getProducts = async () => {
+  try {
+    return await (await fetch(`Products`)).json();
   } catch (err) {
     console.log(err);
   }

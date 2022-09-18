@@ -28,9 +28,9 @@ public static class GetProduct
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            var product = await _db.Products.FirstOrDefaultAsync(cancellationToken);
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
 
-            product = product ?? throw new Exception("product cannot be found");
+            product = product ?? throw new Exception($"product cannot be found. ProductId: {request.ProductId}");
 
             return new Response
             {

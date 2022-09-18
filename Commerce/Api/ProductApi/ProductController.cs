@@ -26,9 +26,15 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GetProduct.Response>> GetProduct([FromRoute] int productId, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetProduct.Response>> GetProduct([FromRoute] int id, CancellationToken cancellationToken)
     {
-        return Ok(await _mediator.Send(new GetProduct.Request { ProductId = productId }, cancellationToken));
+        return Ok(await _mediator.Send(new GetProduct.Request { ProductId = id }, cancellationToken));
+    }
+
+    [HttpGet("/products")]
+    public async Task<ActionResult<List<GetProducts.Response>>> GetProducts(CancellationToken cancellationToken)
+    {
+        return Ok(await _mediator.Send(new GetProducts.Request(), cancellationToken));
     }
 
 }
