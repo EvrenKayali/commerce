@@ -19,12 +19,12 @@ export const addProduct = async (product: Product) => {
   }
 };
 
-export const uploadFileImages = async (images: FileList) => {
-  if (!Boolean(images?.length)) return;
+export const uploadFileImages = async (images?: FileList) => {
+  if (Boolean(images?.length)) return;
 
   const formData = new FormData();
 
-  Array.from(images).forEach((img) => {
+  Array.from(images as FileList).forEach((img) => {
     formData.append("images", img);
   });
 

@@ -19,9 +19,8 @@ function App() {
       </Box>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/product" element={<Product />}>
-          <Route path=":productId" element={<Product />} />
-        </Route>
+        <Route path="/product" element={<Product />} />
+        <Route path="/product/:productId" element={<Product />} />
       </Routes>
     </>
   );

@@ -1,6 +1,7 @@
 import { Typography, Button, Stack } from "@mui/material";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { addProduct, getProduct, uploadFileImages } from "./api/api";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
@@ -10,25 +11,19 @@ import Variants from "./product/Variants";
 type FormValues = {
   title: string;
   description: string;
-  images: FileList;
-  variants: {
+  images?: FileList;
+  variants?: {
     name: string;
     value: string;
   }[];
 };
 
-export const Product: React.FC = () => {
+function Form({ formData }: { formData?: FormValues }) {
   const methods = useForm<FormValues>({
     mode: "onBlur",
+    defaultValues: formData,
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await getProduct(1);
-    };
-
-    fetchData();
-  }, []);
   const onSubmit = async (data: FormValues) => {
     await uploadFileImages(data.images);
 
@@ -36,7 +31,6 @@ export const Product: React.FC = () => {
 
     await addProduct(productDataWithoutImages);
   };
-
   return (
     <FormProvider {...methods}>
       <form
@@ -45,10 +39,6 @@ export const Product: React.FC = () => {
       >
         <Stack margin="0 auto" spacing={2}>
           <Typography variant="h5">Add Product</Typography>
-          {/* <img
-            src="http://127.0.0.1:10000/devstoreaccount1/products/title/3K28Store_1daba9ceba57054246aa5680fae63d04.jpeg"
-            alt=""
-          /> */}
           <BasicInfo />
           <Images />
           <Pricing />
@@ -58,4 +48,25 @@ export const Product: React.FC = () => {
       </form>
     </FormProvider>
   );
+}
+
+export const Product: React.FC = () => {
+  const [vals, setVals] = useState<FormValues | undefined>();
+  let params = useParams();
+  const productId = parseInt(params.productId as string);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getProduct(1);
+      setVals(result);
+    };
+    if (productId) {
+      console.log(productId);
+      fetchData();
+    } else {
+      setVals({ title: "", description: "" });
+    }
+  }, [productId]);
+
+  return vals ? <Form formData={vals} /> : null;
 };
