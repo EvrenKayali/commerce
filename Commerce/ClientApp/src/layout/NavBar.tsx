@@ -12,14 +12,23 @@ export default function NavBar() {
   return (
     <List
       disablePadding
-      sx={{ borderRight: "1px solid #a8a7a7", height: "100%" }}
+      sx={{
+        borderRight: "1px solid #a8a7a7",
+        height: "100%",
+        display: { xs: "none", sm: "block" },
+      }}
     >
       <ListItem disablePadding>
         <ListItemButton component={Link} to="/">
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary="Home" />
+          <ListItemText
+            primary="Home"
+            sx={{
+              display: { xs: "none", lg: "block" },
+            }}
+          />
         </ListItemButton>
       </ListItem>
       <ListItem disablePadding>
@@ -27,7 +36,12 @@ export default function NavBar() {
           <ListItemIcon>
             <Sell />
           </ListItemIcon>
-          <ListItemText primary="Products" />
+          <ListItemText
+            primary="Products"
+            sx={{
+              display: { xs: "none", lg: "block" },
+            }}
+          />
         </ListItemButton>
       </ListItem>
     </List>

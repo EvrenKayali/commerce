@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import { Product } from "./Product";
@@ -11,18 +11,18 @@ function App() {
     <>
       <Header />
       <Grid container mt="2rem">
-        <Grid item md={1}>
+        <Grid item md={2} lg={2}>
           <NavBar />
         </Grid>
-        <Grid item md={5}>
-          <Container>
+        <Grid item md={10} lg={9}>
+          <Box mx="1rem">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
               <Route path="/product" element={<Product />} />
               <Route path="/product/:productId" element={<Product />} />
             </Routes>
-          </Container>
+          </Box>
         </Grid>
       </Grid>
     </>

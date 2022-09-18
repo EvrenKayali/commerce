@@ -2,21 +2,29 @@ import { Card, CardContent, Box, Typography, InputBase } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
 export default function BasicInfo() {
-  const { register } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   return (
     <Card>
       <CardContent>
         <Box mb="1rem">
           <Typography mb="0.25rem">Title</Typography>
           <InputBase
-            {...register("title")}
+            {...register("title", { required: "This field cannot be empty" })}
             fullWidth
             sx={{
-              border: "1px solid #ccc",
+              border: errors.title ? "1px solid  red" : "1px solid #ccc",
               borderRadius: "0.2rem",
               padding: "0.25rem",
             }}
           />
+          {errors.title && errors.title.type === "required" && (
+            <Typography variant="body2" color="error">
+              {errors.title.message as string}
+            </Typography>
+          )}
         </Box>
         <Box mb="1rem">
           <Typography mb="0.25rem">Description</Typography>

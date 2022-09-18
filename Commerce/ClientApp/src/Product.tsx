@@ -33,23 +33,25 @@ function Form({ formData }: { formData?: FormValues }) {
     await addProduct(productDataWithoutImages);
   };
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <Stack spacing={2}>
-          <Box display="flex" justifyContent="space-between">
-            <Typography variant="h5">Add Product</Typography>
-            <Button variant="contained" type="submit">
-              Save
-            </Button>
-          </Box>
-          <BasicInfo />
-          <Images />
-          <Pricing />
-          <Variants />
-        </Stack>
-        <Button type="submit">Save</Button>
-      </form>
-    </FormProvider>
+    <Box maxWidth="md">
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <Stack spacing={2}>
+            <Box display="flex" justifyContent="space-between">
+              <Typography variant="h5">Add Product</Typography>
+              <Button variant="contained" type="submit">
+                Save
+              </Button>
+            </Box>
+            <BasicInfo />
+            <Images />
+            <Pricing />
+            <Variants />
+          </Stack>
+          <Button type="submit">Save</Button>
+        </form>
+      </FormProvider>
+    </Box>
   );
 }
 

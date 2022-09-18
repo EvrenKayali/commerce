@@ -28,7 +28,6 @@ export default function Products() {
   return (
     <Stack spacing={2}>
       <Typography variant="h5">Products</Typography>
-
       <Paper>
         <Box display="flex" justifyContent="flex-end" p=".5rem">
           <Button
