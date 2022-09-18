@@ -7,11 +7,13 @@ import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import Pricing from "./product/Pricing";
 import Variants from "./product/Variants";
+import { uid } from "./utils/uid";
 
 type FormValues = {
   id: number;
   title: string;
   description: string;
+  slug: string;
   images?: FileList;
   variants?: {
     name: string;
@@ -26,11 +28,12 @@ function Form({ formData }: { formData?: FormValues }) {
   });
 
   const onSubmit = async (data: FormValues) => {
-    await uploadFileImages(data.images);
+    const folder = uid();
+    await uploadFileImages(data.images, folder);
 
     const { images, ...productDataWithoutImages } = data;
 
-    await addProduct(productDataWithoutImages);
+    await addProduct({ ...productDataWithoutImages, folder });
   };
   return (
     <Box maxWidth="md">
@@ -68,7 +71,7 @@ export const Product: React.FC = () => {
     if (productId) {
       fetchData(productId);
     } else {
-      setVals({ title: "", description: "", id: 0 });
+      setVals({ title: "", description: "", slug: "", id: 0 });
     }
   }, [productId]);
 

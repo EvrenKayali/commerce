@@ -15,7 +15,6 @@ public class ProductController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> Add([FromBody] AddProduct.Request request, CancellationToken cancellationToken)
     {
-
         return Ok(await _mediator.Send(request, cancellationToken));
     }
 

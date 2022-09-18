@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import SortableImageList, { Image } from "../components/SortableImageList";
+import { uid } from "../utils/uid";
 
 export default function Images() {
   const { setValue, register } = useFormContext();
@@ -42,7 +43,7 @@ export default function Images() {
     <Card>
       <CardContent>
         <Typography variant="h5" mb="0.25rem">
-          Images
+          Images {uid()}
         </Typography>
         <div {...getRootProps()} style={{ border: "1px dashed #ccc" }}>
           <input {...getInputProps()} {...register("images")} />

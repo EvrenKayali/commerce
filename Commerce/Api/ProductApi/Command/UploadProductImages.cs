@@ -7,6 +7,7 @@ public static class UploadProductImages
     public record Request : IRequest<Unit>
     {
         public IFormFile[]? Images { get; set; }
+        public string? Folder { get; set; }
     }
 
     public class Handler : IRequestHandler<Request, Unit>
@@ -30,7 +31,7 @@ public static class UploadProductImages
                     using var stream = new MemoryStream();
                     await image.CopyToAsync(stream, cancellationToken);
                     stream.Position = 0;
-                    var blobClient = container.GetBlobClient($"title/{image.FileName}");
+                    var blobClient = container.GetBlobClient($"{request.Folder}/{image.FileName}");
                     await blobClient.UploadAsync(stream, true, cancellationToken);
                 }
             }

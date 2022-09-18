@@ -2,6 +2,7 @@ export interface Product {
   id: number;
   title: string;
   description: string;
+  folder?: string;
 }
 
 export const addProduct = async (product: Product) => {
@@ -20,13 +21,16 @@ export const addProduct = async (product: Product) => {
   }
 };
 
-export const uploadFileImages = async (images?: FileList) => {
-  if (Boolean(images?.length)) return;
+export const uploadFileImages = async (images?: FileList, folder?: string) => {
+  if (!Boolean(images?.length)) return;
+
+  console.log("here");
 
   const formData = new FormData();
 
   Array.from(images as FileList).forEach((img) => {
     formData.append("images", img);
+    formData.append("folder", folder!);
   });
 
   try {
