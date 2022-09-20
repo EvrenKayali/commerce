@@ -24,6 +24,12 @@ public class ProductController : ControllerBase
         return Ok(await _mediator.Send(request, cancellationToken));
     }
 
+    [HttpPost("addWithImages")]
+    public async Task<IActionResult> AddWithImages([FromForm] AddProductWithImgages.Request request, CancellationToken cancellationToken)
+    {
+        return Ok(await _mediator.Send(request, cancellationToken));
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<GetProduct.Response>> GetProduct([FromRoute] int id, CancellationToken cancellationToken)
     {

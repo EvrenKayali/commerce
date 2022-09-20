@@ -2,7 +2,12 @@ import { Typography, Button, Stack, Box } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { addProduct, getProduct, uploadFileImages } from "./api/api";
+import {
+  addProduct,
+  addProductWithImages,
+  getProduct,
+  uploadFileImages,
+} from "./api/api";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import Pricing from "./product/Pricing";
@@ -28,11 +33,20 @@ function Form({ formData, header }: { formData?: FormValues; header: string }) {
 
   const onSubmit = async (data: FormValues) => {
     console.log(new FormData(formRef.current!).values());
-    await uploadFileImages(data.images, data.slug);
 
-    const { images, ...productDataWithoutImages } = data;
+    if (formRef.current) {
+      const formData = new FormData(formRef.current);
+      Array.from(data.images as FileList).forEach((img) => {
+        formData.append("images", img);
+      });
+      await addProductWithImages(formData);
+    }
 
-    await addProduct({ ...productDataWithoutImages });
+    // await uploadFileImages(data.images, data.slug);
+
+    // const { images, ...productDataWithoutImages } = data;
+
+    // await addProduct({ ...productDataWithoutImages });
   };
   return (
     <Box maxWidth="60rem">

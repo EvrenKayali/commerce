@@ -10,10 +10,10 @@ export default function Images() {
   const { setValue, register } = useFormContext();
 
   const [images, setImages] = useState<Image[]>([
-    {
-      id: 1,
-      src: "http://127.0.0.1:10000/devstoreaccount1/products/3k28-mario/3K28Store_1daba9ceba57054246aa5680fae63d04.jpeg",
-    },
+    // {
+    //   id: 1,
+    //   src: "http://127.0.0.1:10000/devstoreaccount1/products/3k28-mario/3K28Store_1daba9ceba57054246aa5680fae63d04.jpeg",
+    // },
   ]);
 
   const { getRootProps, getInputProps } = useDropzone({

@@ -69,7 +69,7 @@ export const getProducts = async () => {
 export const addProductWithImages = async (data: FormData) => {
   try {
     await (
-      await fetch("Product/images", {
+      await fetch("Product/addWithImages", {
         method: "POST",
         body: data,
       })
