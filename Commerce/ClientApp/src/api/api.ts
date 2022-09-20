@@ -1,8 +1,15 @@
+export interface ProductImage {
+  id: number;
+  folder: string;
+  fileName: string;
+  order: number;
+}
 export interface Product {
   id: number;
   title: string;
   description: string;
   slug?: string;
+  productImage?: ProductImage[];
 }
 
 export const addProduct = async (product: Product) => {
@@ -23,8 +30,6 @@ export const addProduct = async (product: Product) => {
 
 export const uploadFileImages = async (images?: FileList, folder?: string) => {
   if (!Boolean(images?.length)) return;
-
-  console.log("here");
 
   const formData = new FormData();
 
@@ -56,6 +61,19 @@ export const getProduct = async (id: number) => {
 export const getProducts = async () => {
   try {
     return (await (await fetch(`Products`)).json()) as Product[];
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const addProductWithImages = async (data: FormData) => {
+  try {
+    await (
+      await fetch("Product/images", {
+        method: "POST",
+        body: data,
+      })
+    ).json();
   } catch (err) {
     console.log(err);
   }
