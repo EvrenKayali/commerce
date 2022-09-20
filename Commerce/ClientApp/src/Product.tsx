@@ -1,5 +1,5 @@
 import { Typography, Button, Stack, Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { addProduct, getProduct, uploadFileImages } from "./api/api";
@@ -21,12 +21,13 @@ type FormValues = {
 };
 
 function Form({ formData, header }: { formData?: FormValues; header: string }) {
+  const formRef = useRef<HTMLFormElement>(null);
   const methods = useForm<FormValues>({
-    mode: "onBlur",
     defaultValues: formData,
   });
 
   const onSubmit = async (data: FormValues) => {
+    console.log(new FormData(formRef.current!).values());
     await uploadFileImages(data.images, data.slug);
 
     const { images, ...productDataWithoutImages } = data;
@@ -34,9 +35,9 @@ function Form({ formData, header }: { formData?: FormValues; header: string }) {
     await addProduct({ ...productDataWithoutImages });
   };
   return (
-    <Box maxWidth="md">
+    <Box maxWidth="60rem">
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <form onSubmit={methods.handleSubmit(onSubmit)} ref={formRef}>
           <Stack spacing={2}>
             <Box display="flex" justifyContent="space-between">
               <Typography variant="h5">{header}</Typography>

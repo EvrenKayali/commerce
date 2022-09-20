@@ -16,6 +16,7 @@ export default function NavBar() {
         borderRight: "1px solid #a8a7a7",
         height: "100%",
         display: { xs: "none", sm: "block" },
+        maxWidth: "10rem",
       }}
     >
       <ListItem disablePadding>
@@ -27,6 +28,8 @@ export default function NavBar() {
             primary="Home"
             sx={{
               display: { xs: "none", lg: "block" },
+              margin: "0",
+              padding: "0",
             }}
           />
         </ListItemButton>

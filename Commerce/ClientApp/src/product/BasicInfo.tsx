@@ -42,14 +42,14 @@ export default function BasicInfo() {
             {...register("slug", { required: "This field cannot be empty" })}
             fullWidth
             sx={{
-              border: errors.title ? "1px solid  red" : "1px solid #ccc",
+              border: errors.slug ? "1px solid  red" : "1px solid #ccc",
               borderRadius: "0.2rem",
               padding: "0.25rem",
             }}
           />
-          {errors.title && errors.title.type === "required" && (
+          {errors.slug && errors.slug.type === "required" && (
             <Typography variant="body2" color="error">
-              {errors.title.message as string}
+              {errors.slug.message as string}
             </Typography>
           )}
         </Box>

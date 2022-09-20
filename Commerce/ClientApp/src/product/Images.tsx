@@ -9,7 +9,12 @@ import SortableImageList, { Image } from "../components/SortableImageList";
 export default function Images() {
   const { setValue, register } = useFormContext();
 
-  const [images, setImages] = useState<Image[]>([]);
+  const [images, setImages] = useState<Image[]>([
+    {
+      id: 1,
+      src: "http://127.0.0.1:10000/devstoreaccount1/products/3k28-mario/3K28Store_1daba9ceba57054246aa5680fae63d04.jpeg",
+    },
+  ]);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -46,7 +51,7 @@ export default function Images() {
         </Typography>
         <div {...getRootProps()} style={{ border: "1px dashed #ccc" }}>
           <input {...getInputProps()} {...register("images")} />
-          <SortableImageList onDragEnd={handleDragEnd} images={images} />
+          <SortableImageList onDragEnd={handleDragEnd} images={[...images]} />
           <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
       </CardContent>
