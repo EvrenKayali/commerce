@@ -1,6 +1,7 @@
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { Card, CardContent, Typography } from "@mui/material";
+import { AddAPhoto } from "@mui/icons-material";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
@@ -68,10 +69,25 @@ export default function Images({ defaultImages }: props) {
         <Typography variant="h5" mb="0.25rem">
           Images
         </Typography>
-        <div {...getRootProps()} style={{ border: "1px dashed #ccc" }}>
+        <div
+          {...getRootProps()}
+          style={{
+            border: "1px dashed #ccc",
+            padding: Boolean(images.length) ? "0" : "2rem",
+          }}
+        >
           <input {...getInputProps()} {...register("imageFiles")} />
-          <SortableImageList onDragEnd={handleSortEnd} images={[...images]} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <SortableImageList onDragEnd={handleSortEnd} images={images} />
+          {Boolean(images.length) || (
+            <>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <AddAPhoto sx={{ fontSize: "10rem" }} color="primary" />
+              </Box>
+              <Typography variant="body2" textAlign={"center"}>
+                Drag and drop images files to add new photes
+              </Typography>
+            </>
+          )}
         </div>
       </CardContent>
     </Card>

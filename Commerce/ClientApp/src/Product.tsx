@@ -83,13 +83,10 @@ export const Product: React.FC = () => {
   }, [productId]);
 
   return vals ? (
-    <>
-      <Button>Reset Images</Button>
-      <Form
-        images={images}
-        formData={vals}
-        header={productId ? "Edit Product" : "Add Product"}
-      />
-    </>
+    <Form
+      images={images}
+      formData={vals}
+      header={productId ? "Edit Product" : "Add Product"}
+    />
   ) : null;
 };
