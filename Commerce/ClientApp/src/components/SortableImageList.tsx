@@ -11,8 +11,11 @@ import { Grid } from "@mui/material";
 import SortableItem from "./SortableItem";
 
 export interface Image {
+  fileName: string;
   src: string;
   id: string | UniqueIdentifier;
+  isNew: boolean;
+  order?: number;
 }
 
 interface props {

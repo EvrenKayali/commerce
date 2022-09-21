@@ -1,4 +1,5 @@
 using Azure.Storage.Blobs;
+using Commerce.Api.BaseResponses;
 using Commerce.Data;
 using Commerce.Data.Entites;
 using MediatR;
@@ -13,10 +14,8 @@ public static class AddProductWithImgages
         public string? Description { get; set; }
         public string? Slug { get; set; }
         public IFormFile[]? ImageFiles { get; set; }
-        public List<ProductImage>? Images { get; set; }
+        public List<ProductImageBaseRequest>? Images { get; set; }
     }
-
-
 
     public class Handler : IRequestHandler<Request, Unit>
     {
@@ -33,11 +32,12 @@ public static class AddProductWithImgages
         {
             await UploadImages(request.Slug!, request.ImageFiles, cancellationToken);
 
-            var productImages = request.ImageFiles?
+            var productImages = request.Images?
                 .Select(img => new ProductImage
                 {
                     FileName = img.FileName,
-                    Folder = request.Slug!
+                    Folder = request.Slug!,
+                    Order = img.Order
                 }).ToList();
 
             var product = new Product

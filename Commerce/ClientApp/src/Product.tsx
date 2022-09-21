@@ -7,8 +7,6 @@ import { addProductWithImages, getProduct } from "./api/api";
 import { Image } from "./components/SortableImageList";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
-import Pricing from "./product/Pricing";
-import Variants from "./product/Variants";
 
 type FormValues = {
   id: number;
@@ -36,7 +34,10 @@ function Form({ formData, header, images }: props) {
   });
 
   const onSubmit = async (data: FormValues) => {
-    const formData = serialize(data, { noFilesWithArrayNotation: true });
+    const formData = serialize(data, {
+      noFilesWithArrayNotation: true,
+      indices: true,
+    });
     await addProductWithImages(formData);
   };
   return (
@@ -52,8 +53,8 @@ function Form({ formData, header, images }: props) {
             </Box>
             <BasicInfo />
             <Images defaultImages={images} />
-            <Pricing />
-            <Variants />
+            {/* <Pricing />
+            <Variants /> */}
           </Stack>
           <Button type="submit">Save</Button>
         </form>

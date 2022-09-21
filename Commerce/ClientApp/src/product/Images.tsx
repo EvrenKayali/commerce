@@ -20,12 +20,28 @@ export default function Images({ defaultImages }: props) {
     },
     noClick: true,
     onDrop: (acceptedFiles) => {
-      const newImages = acceptedFiles.map((file) => ({
+      const newImageFiles = acceptedFiles.map((file) => ({
         src: URL.createObjectURL(file),
         id: file.name,
+        fileName: file.name,
+        isNew: true,
       }));
       setValue("imageFiles", acceptedFiles);
-      setImages([...images, ...newImages]);
+      setImages([...images, ...newImageFiles]);
+      const oldImges = images.map((img, idx) => ({
+        ...img,
+        id: 0,
+        order: idx,
+      }));
+      const newImages = newImageFiles.map((img, idx) => ({
+        ...img,
+        id: 0,
+        order: idx,
+      }));
+
+      console.log([...oldImges, ...newImages]);
+
+      setValue("images", [...oldImges, ...newImages]);
     },
   });
 
@@ -37,7 +53,10 @@ export default function Images({ defaultImages }: props) {
         const oldIndex = items.findIndex((i) => i.id === active.id);
         const newIndex = items.findIndex((i) => i.id === over?.id);
         const newOrder = arrayMove(items, oldIndex, newIndex);
-        // setValue("images", newOrder);
+        setValue(
+          "images",
+          newOrder.map((img, idx) => ({ ...img, id: 0, order: idx }))
+        );
         return newOrder;
       });
     }
