@@ -1,3 +1,4 @@
+using Commerce.Api.BaseResponses;
 using Commerce.Api.ProductApi.Command;
 using Commerce.Api.ProductApi.Query;
 using MediatR;
@@ -31,7 +32,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GetProduct.Response>> GetProduct([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<ProductBaseResponse>> GetProduct([FromRoute] int id, CancellationToken cancellationToken)
     {
         return Ok(await _mediator.Send(new GetProduct.Request { ProductId = id }, cancellationToken));
     }

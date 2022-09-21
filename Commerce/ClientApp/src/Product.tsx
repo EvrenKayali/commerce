@@ -2,12 +2,7 @@ import { Typography, Button, Stack, Box } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import {
-  addProduct,
-  addProductWithImages,
-  getProduct,
-  uploadFileImages,
-} from "./api/api";
+import { addProductWithImages, getProduct } from "./api/api";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import Pricing from "./product/Pricing";

@@ -32,11 +32,19 @@ public static class AddProductWithImgages
         {
             await UploadImages(request.Slug!, request.Images, cancellationToken);
 
+            var productImages = request.Images?
+                .Select(img => new ProductImage
+                {
+                    FileName = img.FileName,
+                    Folder = request.Slug!
+                }).ToList();
+
             var product = new Product
             {
                 Title = request.Title!,
                 Description = request.Description!,
-                Slug = request.Slug!
+                Slug = request.Slug!,
+                Images = productImages
             };
 
             await _db.Products.AddAsync(product, cancellationToken);

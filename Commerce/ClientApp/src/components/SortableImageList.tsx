@@ -13,6 +13,7 @@ import SortableItem from "./SortableItem";
 export interface Image {
   src: string;
   id: string | UniqueIdentifier;
+  order?: number;
 }
 
 interface props {
