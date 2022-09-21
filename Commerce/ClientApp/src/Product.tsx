@@ -1,4 +1,5 @@
 import { Typography, Button, Stack, Box } from "@mui/material";
+import { serialize } from "object-to-formdata";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -14,7 +15,8 @@ type FormValues = {
   title: string;
   description: string;
   slug: string;
-  images?: FileList;
+  imageFiles?: FileList;
+  images: Image[];
   variants?: {
     name: string;
     value: string;
@@ -34,13 +36,8 @@ function Form({ formData, header, images }: props) {
   });
 
   const onSubmit = async (data: FormValues) => {
-    if (formRef.current) {
-      const formData = new FormData(formRef.current);
-      Array.from(data.images as FileList).forEach((img) => {
-        formData.append("images", img);
-      });
-      await addProductWithImages(formData);
-    }
+    const formData = serialize(data, { noFilesWithArrayNotation: true });
+    await addProductWithImages(formData);
   };
   return (
     <Box maxWidth="60rem">
@@ -80,7 +77,7 @@ export const Product: React.FC = () => {
     if (productId) {
       fetchData(productId);
     } else {
-      setVals({ title: "", description: "", slug: "", id: 0 });
+      setVals({ title: "", description: "", slug: "", id: 0, images: [] });
     }
   }, [productId]);
 

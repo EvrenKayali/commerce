@@ -12,7 +12,8 @@ public static class AddProductWithImgages
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Slug { get; set; }
-        public IFormFile[]? Images { get; set; }
+        public IFormFile[]? ImageFiles { get; set; }
+        public List<ProductImage>? Images { get; set; }
     }
 
 
@@ -30,9 +31,9 @@ public static class AddProductWithImgages
         }
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
-            await UploadImages(request.Slug!, request.Images, cancellationToken);
+            await UploadImages(request.Slug!, request.ImageFiles, cancellationToken);
 
-            var productImages = request.Images?
+            var productImages = request.ImageFiles?
                 .Select(img => new ProductImage
                 {
                     FileName = img.FileName,

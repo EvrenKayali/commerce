@@ -24,7 +24,7 @@ export default function Images({ defaultImages }: props) {
         src: URL.createObjectURL(file),
         id: file.name,
       }));
-      setValue("images", acceptedFiles);
+      setValue("imageFiles", acceptedFiles);
       setImages([...images, ...newImages]);
     },
   });
@@ -32,13 +32,13 @@ export default function Images({ defaultImages }: props) {
   function handleSortEnd(event: DragEndEvent) {
     const { active, over } = event;
 
-    console.log(event);
-
     if (active.id !== over?.id) {
       setImages((items) => {
         const oldIndex = items.findIndex((i) => i.id === active.id);
         const newIndex = items.findIndex((i) => i.id === over?.id);
-        return arrayMove(items, oldIndex, newIndex);
+        const newOrder = arrayMove(items, oldIndex, newIndex);
+        // setValue("images", newOrder);
+        return newOrder;
       });
     }
   }
@@ -50,7 +50,7 @@ export default function Images({ defaultImages }: props) {
           Images
         </Typography>
         <div {...getRootProps()} style={{ border: "1px dashed #ccc" }}>
-          <input {...getInputProps()} {...register("images")} />
+          <input {...getInputProps()} {...register("imageFiles")} />
           <SortableImageList onDragEnd={handleSortEnd} images={[...images]} />
           <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
