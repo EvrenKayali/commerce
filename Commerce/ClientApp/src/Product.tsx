@@ -1,8 +1,11 @@
+import { DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { Typography, Button, Stack, Box } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { addProductWithImages, getProduct } from "./api/api";
+import { Image } from "./components/SortableImageList";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import Pricing from "./product/Pricing";
@@ -20,7 +23,15 @@ type FormValues = {
   }[];
 };
 
-function Form({ formData, header }: { formData?: FormValues; header: string }) {
+interface props {
+  formData?: FormValues;
+  header: string;
+  images: Image[];
+  onFileDrop: (files: Image[]) => void;
+  onSortingEnd: (event: DragEndEvent) => void;
+}
+
+function Form({ formData, header, images, onFileDrop, onSortingEnd }: props) {
   const formRef = useRef<HTMLFormElement>(null);
   const methods = useForm<FormValues>({
     defaultValues: formData,
@@ -36,12 +47,6 @@ function Form({ formData, header }: { formData?: FormValues; header: string }) {
       });
       await addProductWithImages(formData);
     }
-
-    // await uploadFileImages(data.images, data.slug);
-
-    // const { images, ...productDataWithoutImages } = data;
-
-    // await addProduct({ ...productDataWithoutImages });
   };
   return (
     <Box maxWidth="60rem">
@@ -55,7 +60,11 @@ function Form({ formData, header }: { formData?: FormValues; header: string }) {
               </Button>
             </Box>
             <BasicInfo />
-            <Images />
+            <Images
+              onSortingEnd={onSortingEnd}
+              onFileDrop={onFileDrop}
+              images={images}
+            />
             <Pricing />
             <Variants />
           </Stack>
@@ -68,13 +77,33 @@ function Form({ formData, header }: { formData?: FormValues; header: string }) {
 
 export const Product: React.FC = () => {
   const [vals, setVals] = useState<FormValues | undefined>();
+  const [images, setImages] = useState<Image[]>([]);
   let params = useParams();
   const productId = parseInt(params.productId as string);
+
+  function handleSortEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    console.log(event);
+
+    if (active.id !== over?.id) {
+      setImages((items) => {
+        const oldIndex = items.findIndex((i) => i.id === active.id);
+        const newIndex = items.findIndex((i) => i.id === over?.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  }
+
+  function handleFileDrop(newImages: Image[]) {
+    setImages([...images, ...newImages]);
+  }
 
   useEffect(() => {
     const fetchData = async (productId: number) => {
       const result = await getProduct(productId);
       setVals(result);
+      setImages(result.images);
     };
     if (productId) {
       fetchData(productId);
@@ -84,6 +113,12 @@ export const Product: React.FC = () => {
   }, [productId]);
 
   return vals ? (
-    <Form formData={vals} header={productId ? "Edit Product" : "Add Product"} />
+    <Form
+      images={images}
+      onSortingEnd={handleSortEnd}
+      onFileDrop={handleFileDrop}
+      formData={vals}
+      header={productId ? "Edit Product" : "Add Product"}
+    />
   ) : null;
 };

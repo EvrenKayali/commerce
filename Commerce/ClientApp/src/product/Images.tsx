@@ -1,15 +1,17 @@
 import { DragEndEvent } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
 import { Card, CardContent, Typography } from "@mui/material";
-import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import SortableImageList, { Image } from "../components/SortableImageList";
 
-export default function Images() {
-  const { setValue, register } = useFormContext();
+interface props {
+  images: Image[];
+  onFileDrop: (files: Image[]) => void;
+  onSortingEnd: (event: DragEndEvent) => void;
+}
 
-  const [images, setImages] = useState<Image[]>([]);
+export default function Images({ images, onFileDrop, onSortingEnd }: props) {
+  const { setValue, register } = useFormContext();
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -22,21 +24,9 @@ export default function Images() {
         id: file.name,
       }));
       setValue("images", acceptedFiles);
-      setImages([...images, ...newImages]);
+      onFileDrop(newImages);
     },
   });
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-
-    if (active.id !== over?.id) {
-      setImages((items) => {
-        const oldIndex = items.findIndex((i) => i.id === active.id);
-        const newIndex = items.findIndex((i) => i.id === over?.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  }
 
   return (
     <Card>
@@ -46,7 +36,7 @@ export default function Images() {
         </Typography>
         <div {...getRootProps()} style={{ border: "1px dashed #ccc" }}>
           <input {...getInputProps()} {...register("images")} />
-          <SortableImageList onDragEnd={handleDragEnd} images={[...images]} />
+          <SortableImageList onDragEnd={onSortingEnd} images={[...images]} />
           <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
       </CardContent>
