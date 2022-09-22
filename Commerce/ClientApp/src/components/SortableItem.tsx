@@ -3,10 +3,11 @@ import { CSS } from "@dnd-kit/utilities";
 
 interface props {
   children: React.ReactNode;
+  actions?: React.ReactNode;
   id: string | number;
 }
 
-export default function SortableItem({ children, id }: props) {
+export default function SortableItem({ children, actions, id }: props) {
   const { setNodeRef, attributes, listeners, transform } = useSortable({
     id: id,
   });
@@ -16,8 +17,11 @@ export default function SortableItem({ children, id }: props) {
   };
 
   return (
-    <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-      {children}
+    <div ref={setNodeRef} style={style}>
+      {actions && <div>{actions}</div>}
+      <div {...attributes} {...listeners}>
+        {children}
+      </div>
     </div>
   );
 }

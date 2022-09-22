@@ -2,49 +2,53 @@ import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { AddAPhoto } from "@mui/icons-material";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import SortableImageList, { Image } from "../components/SortableImageList";
 
 interface props {
   defaultImages: Image[];
+  onChange?: (files: File[]) => void;
 }
 
 export default function Images({ defaultImages }: props) {
-  const { setValue, register } = useFormContext();
+  const { setValue } = useFormContext();
   const [images, setImages] = useState<Image[]>(defaultImages);
+  const [files, setFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [],
     },
     noClick: true,
-    onDrop: (acceptedFiles) => {
-      const newImageFiles = acceptedFiles.map((file) => ({
-        src: URL.createObjectURL(file),
-        id: file.name,
-        fileName: file.name,
-        isNew: true,
-      }));
-      setValue("imageFiles", acceptedFiles);
-      setImages([...images, ...newImageFiles]);
-      const oldImges = images.map((img, idx) => ({
-        ...img,
-        id: 0,
-        order: idx,
-      }));
-      const newImages = newImageFiles.map((img, idx) => ({
-        ...img,
-        id: 0,
-        order: idx,
-      }));
-
-      console.log([...oldImges, ...newImages]);
-
-      setValue("images", [...oldImges, ...newImages]);
-    },
+    onDrop: handleFileDrop,
   });
+
+  useEffect(() => {
+    setValue("imageFiles", files);
+    setValue(
+      "images",
+      images.map((img, idx) => ({ ...img, id: 0, order: idx }))
+    );
+  }, [files, images, setValue]);
+
+  function handleFileDrop(acceptedFiles: File[]) {
+    const newImageFiles = acceptedFiles.map((file) => ({
+      src: URL.createObjectURL(file),
+      id: file.name,
+      fileName: file.name,
+      isNew: true,
+    }));
+
+    setFiles(acceptedFiles);
+    setImages([...images, ...newImageFiles]);
+  }
+
+  function handleImageDelete(id: string | number) {
+    setImages(images.filter((img) => img.id !== id));
+    setFiles(files.filter((file) => file.name !== id));
+  }
 
   function handleSortEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -76,8 +80,12 @@ export default function Images({ defaultImages }: props) {
             padding: Boolean(images.length) ? "0" : "2rem",
           }}
         >
-          <input {...getInputProps()} {...register("imageFiles")} />
-          <SortableImageList onDragEnd={handleSortEnd} images={images} />
+          <input {...getInputProps()} />
+          <SortableImageList
+            onDragEnd={handleSortEnd}
+            images={images}
+            onDelete={handleImageDelete}
+          />
           {Boolean(images.length) || (
             <>
               <Box display="flex" justifyContent="center" alignItems="center">
@@ -89,6 +97,11 @@ export default function Images({ defaultImages }: props) {
             </>
           )}
         </div>
+        <ul>
+          {files.map((f) => (
+            <li key={f.name}>{f.name}</li>
+          ))}
+        </ul>
       </CardContent>
     </Card>
   );

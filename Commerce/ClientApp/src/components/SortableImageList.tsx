@@ -7,7 +7,8 @@ import {
   useSensor,
 } from "@dnd-kit/core";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
-import { Grid } from "@mui/material";
+import { DeleteForever } from "@mui/icons-material";
+import { Box, Grid, IconButton } from "@mui/material";
 import SortableItem from "./SortableItem";
 
 export interface Image {
@@ -21,9 +22,14 @@ export interface Image {
 interface props {
   images: Image[];
   onDragEnd: (event: DragEndEvent) => void;
+  onDelete?: (id: string | number) => void;
 }
 
-export default function SortableImageList({ images, onDragEnd }: props) {
+export default function SortableImageList({
+  images,
+  onDragEnd,
+  onDelete,
+}: props) {
   const sensor = [useSensor(PointerSensor)];
 
   return (
@@ -39,8 +45,22 @@ export default function SortableImageList({ images, onDragEnd }: props) {
         <Grid p="1rem" container spacing={2}>
           {images?.map((image, idx) => {
             return (
-              <Grid item key={idx}>
-                <SortableItem id={image.id}>
+              <Grid item key={image.id}>
+                <SortableItem
+                  id={image.id}
+                  actions={
+                    <Box bgcolor="blueviolet">
+                      <IconButton
+                        color="inherit"
+                        onClick={() => {
+                          onDelete && onDelete(image.id);
+                        }}
+                      >
+                        <DeleteForever />
+                      </IconButton>
+                    </Box>
+                  }
+                >
                   <img
                     src={image.src}
                     alt=""
