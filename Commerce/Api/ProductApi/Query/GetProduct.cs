@@ -27,13 +27,15 @@ public static class GetProduct
                 .FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
 
             product = product ?? throw new Exception($"product cannot be found. ProductId: {request.ProductId}");
+
             var srcPrefix = "http://127.0.0.1:10000/devstoreaccount1/products";
 
-
-            var images = product.Images?.Select(p => new ProductImageBaseResponse(p.Id, $"{srcPrefix}/{p.Folder}/{p.FileName}", p.FileName)).ToList();
+            var images = product.Images?
+                .OrderBy(img => img.Order)
+                .Select(p => new ProductImageBaseResponse(p.Id, $"{srcPrefix}/{p.Folder}/{p.FileName}", p.FileName))
+                .ToList();
 
             return new ProductBaseResponse(product.Id, product.Title, product.Description, product.Slug, images);
-
         }
     }
 }

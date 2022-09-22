@@ -40,7 +40,6 @@ export default function Images({ defaultImages }: props) {
       fileName: file.name,
       isNew: true,
     }));
-
     setFiles(acceptedFiles);
     setImages([...images, ...newImageFiles]);
   }
@@ -58,10 +57,6 @@ export default function Images({ defaultImages }: props) {
         const oldIndex = items.findIndex((i) => i.id === active.id);
         const newIndex = items.findIndex((i) => i.id === over?.id);
         const newOrder = arrayMove(items, oldIndex, newIndex);
-        setValue(
-          "images",
-          newOrder.map((img, idx) => ({ ...img, id: 0, order: idx }))
-        );
         return newOrder;
       });
     }
