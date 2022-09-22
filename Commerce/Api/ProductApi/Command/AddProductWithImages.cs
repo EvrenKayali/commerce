@@ -8,7 +8,7 @@ namespace Commerce.Api.ProductApi.Command;
 public static class AddProductWithImgages
 {
 
-    public class Request : IRequest<Unit>
+    public record Request : IRequest<Unit>
     {
         public string? Title { get; set; }
         public string? Description { get; set; }

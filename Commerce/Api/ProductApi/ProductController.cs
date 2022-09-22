@@ -31,6 +31,12 @@ public class ProductController : ControllerBase
         return Ok(await _mediator.Send(request, cancellationToken));
     }
 
+    [HttpPost("update")]
+    public async Task<IActionResult> Update([FromForm] UpdateProduct.Request request, CancellationToken cancellationToken)
+    {
+        return Ok(await _mediator.Send(request, cancellationToken));
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductBaseResponse>> GetProduct([FromRoute] int id, CancellationToken cancellationToken)
     {

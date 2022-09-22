@@ -3,7 +3,7 @@ import { serialize } from "object-to-formdata";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { addProductWithImages, getProduct } from "./api/api";
+import { addProductWithImages, getProduct, updateProduct } from "./api/api";
 import { Image } from "./components/SortableImageList";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
@@ -22,23 +22,29 @@ type FormValues = {
 };
 
 interface props {
+  productId?: number;
   formData?: FormValues;
   header: string;
   images: Image[];
 }
 
-function Form({ formData, header, images }: props) {
+function Form({ formData, header, images, productId }: props) {
   const formRef = useRef<HTMLFormElement>(null);
   const methods = useForm<FormValues>({
     defaultValues: formData,
   });
 
   const onSubmit = async (data: FormValues) => {
+    console.log(data);
     const formData = serialize(data, {
       noFilesWithArrayNotation: true,
       indices: true,
     });
-    await addProductWithImages(formData);
+    if (productId && productId > 0) {
+      await updateProduct(formData);
+    } else {
+      await addProductWithImages(formData);
+    }
   };
   return (
     <Box maxWidth="60rem">
@@ -78,12 +84,19 @@ export const Product: React.FC = () => {
     if (productId) {
       fetchData(productId);
     } else {
-      setVals({ title: "", description: "", slug: "", id: 0, images: [] });
+      setVals({
+        title: "",
+        description: "",
+        slug: "",
+        id: 0,
+        images: [],
+      });
     }
   }, [productId]);
 
   return vals ? (
     <Form
+      productId={productId}
       images={images}
       formData={vals}
       header={productId ? "Edit Product" : "Add Product"}

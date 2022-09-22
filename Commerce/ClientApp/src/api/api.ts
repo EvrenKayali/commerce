@@ -79,3 +79,16 @@ export const addProductWithImages = async (data: FormData) => {
     console.log(err);
   }
 };
+
+export const updateProduct = async (data: FormData) => {
+  try {
+    await (
+      await fetch("Product/update", {
+        method: "POST",
+        body: data,
+      })
+    ).json();
+  } catch (err) {
+    console.log(err);
+  }
+};
