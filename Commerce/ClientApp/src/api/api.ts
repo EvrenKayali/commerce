@@ -9,6 +9,7 @@ export interface Product {
   title: string;
   description: string;
   slug?: string;
+  mainImageSrc?: string;
   productImage?: ProductImage[];
 }
 

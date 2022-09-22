@@ -43,6 +43,7 @@ export default function Products() {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell></TableCell>
                 <TableCell>
                   <strong>Title</strong>
                 </TableCell>
@@ -57,6 +58,17 @@ export default function Products() {
             <TableBody>
               {products?.map((p) => (
                 <TableRow key={p.id}>
+                  <TableCell width="5rem">
+                    <img
+                      src={p.mainImageSrc}
+                      alt=""
+                      style={{
+                        width: "75px",
+                        height: "75px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </TableCell>
                   <TableCell>
                     <Link to={`/product/${p.id}`}>{p.title}</Link>
                   </TableCell>
