@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import SortableImageList, { Image } from "../components/SortableImageList";
+import { uid } from "../utils/uid";
 
 interface props {
   defaultImages: Image[];
@@ -36,7 +37,7 @@ export default function Images({ defaultImages }: props) {
   function handleFileDrop(acceptedFiles: File[]) {
     const newImageFiles = acceptedFiles.map((file) => ({
       src: URL.createObjectURL(file),
-      id: file.name,
+      id: uid(),
       fileName: file.name,
       isNew: true,
     }));
@@ -44,9 +45,11 @@ export default function Images({ defaultImages }: props) {
     setImages([...images, ...newImageFiles]);
   }
 
-  function handleImageDelete(id: string | number) {
-    setImages(images.filter((img) => img.id !== id));
-    setFiles(files.filter((file) => file.name !== id));
+  function handleImageDelete(image?: Image) {
+    if (image) {
+      setImages(images.filter((img) => img.id !== image.id));
+      setFiles(files.filter((file) => file.name !== image.fileName));
+    }
   }
 
   function handleSortEnd(event: DragEndEvent) {
@@ -79,7 +82,9 @@ export default function Images({ defaultImages }: props) {
           <SortableImageList
             onDragEnd={handleSortEnd}
             images={images}
-            onDelete={handleImageDelete}
+            onDelete={(id) =>
+              handleImageDelete(images.find((img) => img.id === id))
+            }
           />
           {Boolean(images.length) || (
             <>
