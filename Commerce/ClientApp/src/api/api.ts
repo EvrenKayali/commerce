@@ -64,22 +64,6 @@ export const uploadFileImages = async (images?: FileList, folder?: string) => {
   }
 };
 
-export const getProduct = async (id: number) => {
-  try {
-    return await (await fetch(`Product/${id}`)).json();
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const getProducts = async () => {
-  try {
-    return (await (await fetch(`Products`)).json()) as Product[];
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 export const addProductWithImages = async (data: FormData) => {
   try {
     await (
@@ -113,6 +97,7 @@ async function fetcher<JSON = any>(
   const res = await fetch(input, init);
   return res.json();
 }
+
 export function useProducts() {
   const { data, error } = useSWR<Product[]>(`Products`, fetcher);
 
