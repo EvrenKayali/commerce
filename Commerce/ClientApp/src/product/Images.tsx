@@ -1,5 +1,3 @@
-import { DragEndEvent } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
 import { AddAPhoto } from "@mui/icons-material";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -45,26 +43,6 @@ export default function Images({ defaultImages }: props) {
     setImages([...images, ...newImageFiles]);
   }
 
-  function handleImageDelete(image?: Image) {
-    if (image) {
-      setImages(images.filter((img) => img.id !== image.id));
-      setFiles(files.filter((file) => file.name !== image.fileName));
-    }
-  }
-
-  function handleSortEnd(event: DragEndEvent) {
-    const { active, over } = event;
-
-    if (active.id !== over?.id) {
-      setImages((items) => {
-        const oldIndex = items.findIndex((i) => i.id === active.id);
-        const newIndex = items.findIndex((i) => i.id === over?.id);
-        const newOrder = arrayMove(items, oldIndex, newIndex);
-        return newOrder;
-      });
-    }
-  }
-
   return (
     <Card>
       <CardContent>
@@ -80,11 +58,9 @@ export default function Images({ defaultImages }: props) {
         >
           <input {...getInputProps()} />
           <SortableImageList
-            onDragEnd={handleSortEnd}
+            onChange={(imgs) => setImages(imgs)}
+            onDragEnd={(imgs) => setImages(imgs)}
             images={images}
-            onDelete={(id) =>
-              handleImageDelete(images.find((img) => img.id === id))
-            }
           />
           {Boolean(images.length) || (
             <>

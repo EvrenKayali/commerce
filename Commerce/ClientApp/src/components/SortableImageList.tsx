@@ -6,7 +6,11 @@ import {
   UniqueIdentifier,
   useSensor,
 } from "@dnd-kit/core";
-import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
 import { DeleteForever } from "@mui/icons-material";
 import { Box, Grid, IconButton } from "@mui/material";
 import SortableItem from "./SortableItem";
@@ -21,22 +25,34 @@ export interface Image {
 
 interface props {
   images: Image[];
-  onDragEnd: (event: DragEndEvent) => void;
-  onDelete?: (id: string | number) => void;
+  onChange: (images: Image[]) => void;
+  onDragEnd: (image: Image[]) => void;
 }
 
-export default function SortableImageList({
-  images,
-  onDragEnd,
-  onDelete,
-}: props) {
+export default function SortableImageList({ images, onChange }: props) {
   const sensor = [useSensor(PointerSensor)];
+
+  function handleSortEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = images.findIndex((i) => i.id === active.id);
+      const newIndex = images.findIndex((i) => i.id === over?.id);
+      const newOrder = arrayMove(images, oldIndex, newIndex);
+      onChange(newOrder);
+    }
+  }
+
+  function handleDelete(imgId: UniqueIdentifier) {
+    const newImgs = images.filter((img) => img.id !== imgId);
+    onChange(newImgs);
+  }
 
   return (
     <DndContext
       sensors={sensor}
       collisionDetection={closestCenter}
-      onDragEnd={onDragEnd}
+      onDragEnd={handleSortEnd}
     >
       <SortableContext
         items={images.map((i) => i.id)}
@@ -49,11 +65,12 @@ export default function SortableImageList({
                 <SortableItem
                   id={image.id}
                   actions={
-                    <Box bgcolor="blueviolet">
+                    <Box bgcolor="#e6e3e3">
                       <IconButton
+                        size="small"
                         color="inherit"
                         onClick={() => {
-                          onDelete && onDelete(image.id);
+                          handleDelete(image.id);
                         }}
                       >
                         <DeleteForever />
