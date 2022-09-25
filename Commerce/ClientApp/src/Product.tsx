@@ -13,7 +13,7 @@ type FormValues = {
   title: string;
   description: string;
   slug: string;
-  imageFiles?: FileList;
+  imageFiles?: File[] | null;
   images: Image[];
   variants?: {
     name: string;
@@ -25,21 +25,25 @@ interface props {
   productId?: number;
   formData?: FormValues;
   header: string;
-  images: Image[];
 }
 
-function Form({ formData, header, images, productId }: props) {
+function Form({ formData, header, productId }: props) {
   const formRef = useRef<HTMLFormElement>(null);
   const methods = useForm<FormValues>({
     defaultValues: formData,
   });
 
+  function handleImageChange(imgs: Image[], files?: File[]) {
+    methods.setValue("images", imgs);
+    methods.setValue("imageFiles", files || null);
+  }
+
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
     const formData = serialize(data, {
       noFilesWithArrayNotation: true,
       indices: true,
     });
+
     if (productId && productId > 0) {
       await updateProduct(formData);
     } else {
@@ -58,12 +62,20 @@ function Form({ formData, header, images, productId }: props) {
               </Button>
             </Box>
             <BasicInfo />
-            <Images defaultImages={images} />
+            <Images
+              images={methods.getValues("images")}
+              onChange={(imgs, files) => handleImageChange(imgs, files)}
+            />
             {/* <Pricing />
             <Variants /> */}
           </Stack>
           <Button type="submit">Save</Button>
         </form>
+        <ul>
+          {methods.watch("imageFiles")?.map((f) => (
+            <li key={f.name}>{f.name}</li>
+          ))}
+        </ul>
       </FormProvider>
     </Box>
   );
@@ -71,7 +83,6 @@ function Form({ formData, header, images, productId }: props) {
 
 export const Product: React.FC = () => {
   const [vals, setVals] = useState<FormValues | undefined>();
-  const [images, setImages] = useState<Image[]>([]);
   let params = useParams();
   const productId = parseInt(params.productId as string);
 
@@ -79,7 +90,6 @@ export const Product: React.FC = () => {
     const fetchData = async (productId: number) => {
       const result = await getProduct(productId);
       setVals(result);
-      setImages(result.images);
     };
     if (productId) {
       fetchData(productId);
@@ -97,7 +107,6 @@ export const Product: React.FC = () => {
   return vals ? (
     <Form
       productId={productId}
-      images={images}
       formData={vals}
       header={productId ? "Edit Product" : "Add Product"}
     />

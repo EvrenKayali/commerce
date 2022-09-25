@@ -26,7 +26,6 @@ export interface Image {
 interface props {
   images: Image[];
   onChange: (images: Image[]) => void;
-  onDragEnd: (image: Image[]) => void;
 }
 
 export default function SortableImageList({ images, onChange }: props) {
