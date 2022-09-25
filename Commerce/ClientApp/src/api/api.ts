@@ -1,3 +1,5 @@
+import useSWR from "swr";
+
 export interface ProductImage {
   id: number;
   folder: string;
@@ -92,3 +94,20 @@ export const updateProduct = async (data: FormData) => {
     console.log(err);
   }
 };
+
+async function fetcher<JSON = any>(
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<JSON> {
+  const res = await fetch(input, init);
+  return res.json();
+}
+export function useProducts() {
+  const { data, error } = useSWR<Product[]>(`Products`, fetcher);
+
+  return {
+    products: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}

@@ -11,20 +11,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProducts, Product } from "./api/api";
+import { useProducts } from "./api/api";
 
 export default function Products() {
-  const [products, setProducts] = useState<Product[]>();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await getProducts();
-      setProducts(result);
-    };
-    fetchData();
-  }, []);
+  const { products } = useProducts();
   return (
     <Stack spacing={2}>
       <Typography variant="h5">Products</Typography>
