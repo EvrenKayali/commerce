@@ -1,18 +1,29 @@
 import useSWR from "swr";
+import { Image } from "../components/SortableImageList";
 
 export interface ProductImage {
   id: number;
   folder: string;
   fileName: string;
   order: number;
+  src?: string;
 }
 export interface Product {
   id: number;
   title: string;
   description: string;
-  slug?: string;
+  slug: string;
   mainImageSrc?: string;
-  productImage?: ProductImage[];
+  images?: ProductImage[];
+}
+
+export interface GetProductByIdResponse {
+  id: number;
+  title: string;
+  description: string;
+  slug: string;
+  imageFiles?: File[] | null;
+  images?: Image[];
 }
 
 export const addProduct = async (product: Product) => {
@@ -107,6 +118,19 @@ export function useProducts() {
 
   return {
     products: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}
+
+export function useProduct({ id }: { id: number | undefined }) {
+  const { data, error } = useSWR<GetProductByIdResponse>(
+    id ? `Product/${id}` : null,
+    fetcher
+  );
+
+  return {
+    product: data,
     isLoading: !error && !data,
     isError: error,
   };

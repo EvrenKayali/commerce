@@ -1,35 +1,27 @@
 import { Typography, Button, Stack, Box } from "@mui/material";
 import { serialize } from "object-to-formdata";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { addProductWithImages, getProduct, updateProduct } from "./api/api";
+import {
+  addProductWithImages,
+  GetProductByIdResponse,
+  updateProduct,
+  useProduct,
+} from "./api/api";
 import { Image } from "./components/SortableImageList";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 
-type FormValues = {
-  id: number;
-  title: string;
-  description: string;
-  slug: string;
-  imageFiles?: File[] | null;
-  images: Image[];
-  variants?: {
-    name: string;
-    value: string;
-  }[];
-};
-
 interface props {
   productId?: number;
-  formData?: FormValues;
+  formData?: GetProductByIdResponse;
   header: string;
 }
 
 function Form({ formData, header, productId }: props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const methods = useForm<FormValues>({
+  const methods = useForm<GetProductByIdResponse>({
     defaultValues: formData,
   });
 
@@ -38,7 +30,7 @@ function Form({ formData, header, productId }: props) {
     methods.setValue("imageFiles", files || null);
   }
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: GetProductByIdResponse) => {
     const formData = serialize(data, {
       noFilesWithArrayNotation: true,
       indices: true,
@@ -63,7 +55,7 @@ function Form({ formData, header, productId }: props) {
             </Box>
             <BasicInfo />
             <Images
-              images={methods.getValues("images")}
+              images={methods.getValues("images") || []}
               onChange={(imgs, files) => handleImageChange(imgs, files)}
             />
             {/* <Pricing />
@@ -82,32 +74,15 @@ function Form({ formData, header, productId }: props) {
 }
 
 export const Product: React.FC = () => {
-  const [vals, setVals] = useState<FormValues | undefined>();
   let params = useParams();
   const productId = parseInt(params.productId as string);
 
-  useEffect(() => {
-    const fetchData = async (productId: number) => {
-      const result = await getProduct(productId);
-      setVals(result);
-    };
-    if (productId) {
-      fetchData(productId);
-    } else {
-      setVals({
-        title: "",
-        description: "",
-        slug: "",
-        id: 0,
-        images: [],
-      });
-    }
-  }, [productId]);
+  const { product } = useProduct({ id: productId });
 
-  return vals ? (
+  return !productId || product ? (
     <Form
       productId={productId}
-      formData={vals}
+      formData={product}
       header={productId ? "Edit Product" : "Add Product"}
     />
   ) : null;

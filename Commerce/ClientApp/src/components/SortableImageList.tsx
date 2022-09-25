@@ -19,7 +19,7 @@ export interface Image {
   fileName: string;
   src: string;
   id: string | UniqueIdentifier;
-  isNew: boolean;
+  isNew?: boolean;
   order?: number;
 }
 
