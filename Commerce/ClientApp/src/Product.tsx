@@ -1,7 +1,7 @@
-import { Typography, Button, Stack, Box } from "@mui/material";
+import { Typography, Button, Stack, Box, Snackbar, Alert } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { serialize } from "object-to-formdata";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -14,6 +14,8 @@ import { Image } from "./components/SortableImageList";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import { Save } from "@mui/icons-material";
+import { useQueryClient } from "@tanstack/react-query";
+import Variants from "./product/Variants";
 
 interface props {
   productId?: number;
@@ -22,11 +24,25 @@ interface props {
 }
 
 function Form({ formData, header, productId }: props) {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement>(null);
   const methods = useForm<GetProductByIdResponse>({
     defaultValues: formData,
   });
+
+  const [alert, setAlert] = useState(false);
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
 
   function handleImageChange(imgs: Image[], files?: File[]) {
     methods.setValue("images", imgs);
@@ -44,10 +60,19 @@ function Form({ formData, header, productId }: props) {
     });
 
     if (productId && productId > 0) {
-      await updateProduct(formData);
+      updateProduct(formData, {
+        onSuccess: () => {
+          setAlert(true);
+          queryClient.invalidateQueries(["Product", productId]);
+          queryClient.invalidateQueries(["Products"]);
+        },
+      });
     } else {
       addProduct(formData, {
-        onSuccess: (data) => navigate(`/product/${data?.id}`),
+        onSuccess: (data) => {
+          queryClient.invalidateQueries(["Products"]);
+          navigate(`/product/${data?.id}`);
+        },
       });
     }
   };
@@ -74,8 +99,8 @@ function Form({ formData, header, productId }: props) {
               images={methods.getValues("images") || []}
               onChange={(imgs, files) => handleImageChange(imgs, files)}
             />
-            {/* <Pricing />
-            <Variants /> */}
+            {/* <Pricing /> */}
+            <Variants />
           </Stack>
           <Button type="submit">Save</Button>
         </form>
@@ -85,6 +110,16 @@ function Form({ formData, header, productId }: props) {
           ))}
         </ul>
       </FormProvider>
+      <Snackbar
+        open={alert}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Product Saved
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

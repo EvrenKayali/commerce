@@ -1,3 +1,4 @@
+import { NoPhotography } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -58,15 +59,28 @@ export default function Products() {
                   {products?.map((p) => (
                     <TableRow key={p.id}>
                       <TableCell width="5rem">
-                        <img
-                          src={p.mainImageSrc}
-                          alt=""
-                          style={{
-                            width: "75px",
-                            height: "75px",
-                            objectFit: "cover",
-                          }}
-                        />
+                        {Boolean(p.mainImageSrc?.length) ? (
+                          <img
+                            src={p.mainImageSrc}
+                            alt=""
+                            style={{
+                              width: "75px",
+                              height: "75px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        ) : (
+                          <Box
+                            width="75px"
+                            height="75px"
+                            bgcolor="#ccc"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <NoPhotography fontSize="large" />
+                          </Box>
+                        )}
                       </TableCell>
                       <TableCell>
                         <Link to={`/product/${p.id}`}>{p.title}</Link>

@@ -23,7 +23,7 @@ public static class GetProducts
             var srcPrefix = "http://127.0.0.1:10000/devstoreaccount1/products";
 
             return await _db.Products.Include(p => p.Images)
-            .Select(p => new Response(p.Id, p.Title, p.Description, p.Slug, p.Images != null ? $"{srcPrefix}/{p.Slug}/{p.Images.First().FileName}" : ""))
+            .Select(p => new Response(p.Id, p.Title, p.Description, p.Slug, p.Images!.FirstOrDefault() != null ? $"{srcPrefix}/{p.Slug}/{p.Images.First().FileName}" : ""))
             .ToListAsync(cancellationToken);
         }
     }

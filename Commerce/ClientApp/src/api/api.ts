@@ -39,7 +39,7 @@ export function useProduct({ id }: { id: number | undefined }) {
     return (await axios.get<GetProductByIdResponse>(`Product/${id}`)).data;
   };
 
-  return useQuery(["product", id], () => getProduct(id), {
+  return useQuery(["Product", id], () => getProduct(id), {
     enabled: Boolean(id),
   });
 }
