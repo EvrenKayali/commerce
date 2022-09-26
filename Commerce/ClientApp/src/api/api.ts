@@ -1,4 +1,5 @@
-import useSWR from "swr";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { Image } from "../components/SortableImageList";
 
 export interface ProductImage {
@@ -65,6 +66,7 @@ export const uploadFileImages = async (images?: FileList, folder?: string) => {
 };
 
 export const addProductWithImages = async (data: FormData) => {
+  let isLoading = true;
   try {
     await (
       await fetch("Product/addWithImages", {
@@ -74,7 +76,12 @@ export const addProductWithImages = async (data: FormData) => {
     ).json();
   } catch (err) {
     console.log(err);
+  } finally {
+    isLoading = false;
   }
+  return {
+    isLoading,
+  };
 };
 
 export const updateProduct = async (data: FormData) => {
@@ -90,33 +97,52 @@ export const updateProduct = async (data: FormData) => {
   }
 };
 
-async function fetcher<JSON = any>(
-  input: RequestInfo,
-  init?: RequestInit
-): Promise<JSON> {
-  const res = await fetch(input, init);
-  return res.json();
-}
+// async function fetcher<JSON = any>(
+//   input: RequestInfo,
+//   init?: RequestInit
+// ): Promise<JSON> {
+//   const res = await fetch(input, init);
+//   return res.json();
+// }
+
+// export function useProducts() {
+//   const { data, error } = useSWR<Product[]>(`Products`, fetcher, {
+//     revalidateOnMount: true,
+//   });
+
+//   return {
+//     products: data,
+//     isLoading: !error && !data,
+//     isError: error,
+//   };
+// }
+
+// export function useProduct({ id }: { id: number | undefined }) {
+//   const { data, error } = useSWR<GetProductByIdResponse>(
+//     id ? `Product/${id}` : null,
+//     fetcher
+//   );
+
+//   return {
+//     product: data,
+//     isLoading: !error && !data,
+//     isError: error,
+//   };
+// }
 
 export function useProducts() {
-  const { data, error } = useSWR<Product[]>(`Products`, fetcher);
-
-  return {
-    products: data,
-    isLoading: !error && !data,
-    isError: error,
+  const getProducts = async () => {
+    return (await axios.get<Product[]>("Products")).data;
   };
+  return useQuery(["products"], getProducts);
 }
 
 export function useProduct({ id }: { id: number | undefined }) {
-  const { data, error } = useSWR<GetProductByIdResponse>(
-    id ? `Product/${id}` : null,
-    fetcher
-  );
-
-  return {
-    product: data,
-    isLoading: !error && !data,
-    isError: error,
+  const getProduct = async (id: number | undefined) => {
+    return (await axios.get<GetProductByIdResponse>(`Product/${id}`)).data;
   };
+
+  return useQuery(["product", id], () => getProduct(id), {
+    enabled: Boolean(id),
+  });
 }

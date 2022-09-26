@@ -15,7 +15,12 @@ import { Link } from "react-router-dom";
 import { useProducts } from "./api/api";
 
 export default function Products() {
-  const { products } = useProducts();
+  const {
+    status,
+    data: products,
+    error,
+    isFetching: isLoading,
+  } = useProducts();
   return (
     <Stack spacing={2}>
       <Typography variant="h5">Products</Typography>
@@ -47,26 +52,36 @@ export default function Products() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products?.map((p) => (
-                <TableRow key={p.id}>
-                  <TableCell width="5rem">
-                    <img
-                      src={p.mainImageSrc}
-                      alt=""
-                      style={{
-                        width: "75px",
-                        height: "75px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </TableCell>
+              {status === "loading" ? (
+                <TableRow>
                   <TableCell>
-                    <Link to={`/product/${p.id}`}>{p.title}</Link>
+                    <span>loading....</span>
                   </TableCell>
-                  <TableCell>{p.description}</TableCell>
-                  <TableCell>{p.slug}</TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                <>
+                  {products?.map((p) => (
+                    <TableRow key={p.id}>
+                      <TableCell width="5rem">
+                        <img
+                          src={p.mainImageSrc}
+                          alt=""
+                          style={{
+                            width: "75px",
+                            height: "75px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Link to={`/product/${p.id}`}>{p.title}</Link>
+                      </TableCell>
+                      <TableCell>{p.description}</TableCell>
+                      <TableCell>{p.slug}</TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

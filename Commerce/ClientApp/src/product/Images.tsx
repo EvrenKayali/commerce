@@ -23,7 +23,6 @@ export default function Images({ images, onChange }: props) {
   function handleImageChange(imgs: Image[]) {
     const imgFileNames = imgs.map((img) => img.fileName);
     const filteredFiles = files.filter((f) => imgFileNames.includes(f.name));
-    console.log({ filteredFiles }, { imgs });
     onChange && onChange(imgs, filteredFiles);
   }
 

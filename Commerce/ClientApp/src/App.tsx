@@ -5,10 +5,13 @@ import { Product } from "./Product";
 import Products from "./Products";
 import NavBar from "./layout/NavBar";
 import Header from "./layout/Header";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Header />
       <Box display="flex">
         <Box mr="2rem" mt="1rem">
@@ -23,7 +26,7 @@ function App() {
           </Routes>
         </Box>
       </Box>
-    </>
+    </QueryClientProvider>
   );
 }
 

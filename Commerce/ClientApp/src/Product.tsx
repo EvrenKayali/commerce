@@ -77,7 +77,7 @@ export const Product: React.FC = () => {
   let params = useParams();
   const productId = parseInt(params.productId as string);
 
-  const { product } = useProduct({ id: productId });
+  const { data: product } = useProduct({ id: productId });
 
   return !productId || product ? (
     <Form
