@@ -8,7 +8,7 @@ namespace Commerce.Api.ProductApi.Command;
 public static class AddProductWithImgages
 {
 
-    public record Request : IRequest<Unit>
+    public record Request : IRequest<Response>
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
@@ -17,7 +17,12 @@ public static class AddProductWithImgages
         public List<ProductImageBaseRequest>? Images { get; set; }
     }
 
-    public class Handler : IRequestHandler<Request, Unit>
+    public record Response
+    {
+        public int Id { get; set; }
+    }
+
+    public class Handler : IRequestHandler<Request, Response>
     {
         private readonly BlobServiceClient _blobServiceClient;
 
@@ -28,7 +33,7 @@ public static class AddProductWithImgages
             _db = db;
             _blobServiceClient = blobServiceClient;
         }
-        public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
             await UploadImages(request.Slug!, request.ImageFiles, cancellationToken);
 
@@ -51,7 +56,7 @@ public static class AddProductWithImgages
             await _db.Products.AddAsync(product, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return new Response { Id = product.Id };
         }
 
         private async Task UploadImages(string folderName, IFormFile[]? images, CancellationToken cancellationToken)

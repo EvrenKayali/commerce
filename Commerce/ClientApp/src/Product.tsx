@@ -1,17 +1,19 @@
 import { Typography, Button, Stack, Box } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { serialize } from "object-to-formdata";
 import React, { useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  addProductWithImages,
   GetProductByIdResponse,
-  updateProduct,
+  useAddProductMutation,
   useProduct,
+  useUpdateProductMutation,
 } from "./api/api";
 import { Image } from "./components/SortableImageList";
 import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
+import { Save } from "@mui/icons-material";
 
 interface props {
   productId?: number;
@@ -20,6 +22,7 @@ interface props {
 }
 
 function Form({ formData, header, productId }: props) {
+  const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement>(null);
   const methods = useForm<GetProductByIdResponse>({
     defaultValues: formData,
@@ -30,6 +33,10 @@ function Form({ formData, header, productId }: props) {
     methods.setValue("imageFiles", files || null);
   }
 
+  const { mutate: addProduct, status: addStatus } = useAddProductMutation();
+  const { mutate: updateProduct, status: updateStatus } =
+    useUpdateProductMutation();
+
   const onSubmit = async (data: GetProductByIdResponse) => {
     const formData = serialize(data, {
       noFilesWithArrayNotation: true,
@@ -39,9 +46,12 @@ function Form({ formData, header, productId }: props) {
     if (productId && productId > 0) {
       await updateProduct(formData);
     } else {
-      await addProductWithImages(formData);
+      addProduct(formData, {
+        onSuccess: (data) => navigate(`/product/${data?.id}`),
+      });
     }
   };
+
   return (
     <Box maxWidth="60rem">
       <FormProvider {...methods}>
@@ -49,9 +59,15 @@ function Form({ formData, header, productId }: props) {
           <Stack spacing={2}>
             <Box display="flex" justifyContent="space-between">
               <Typography variant="h5">{header}</Typography>
-              <Button variant="contained" type="submit">
+              <LoadingButton
+                variant="contained"
+                type="submit"
+                loading={updateStatus === "loading" || addStatus === "loading"}
+                endIcon={<Save />}
+                loadingPosition="end"
+              >
                 Save
-              </Button>
+              </LoadingButton>
             </Box>
             <BasicInfo />
             <Images

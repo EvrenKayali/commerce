@@ -15,12 +15,7 @@ import { Link } from "react-router-dom";
 import { useProducts } from "./api/api";
 
 export default function Products() {
-  const {
-    status,
-    data: products,
-    error,
-    isFetching: isLoading,
-  } = useProducts();
+  const { status, data: products } = useProducts();
   return (
     <Stack spacing={2}>
       <Typography variant="h5">Products</Typography>
