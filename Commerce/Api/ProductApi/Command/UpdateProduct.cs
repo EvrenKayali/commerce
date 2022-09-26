@@ -33,8 +33,13 @@ public static class UpdateProduct
         }
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
+            var product = _db.Products
+                .Include(p => p.Images)
+                .FirstOrDefault(p => p.Id == request.Id);
 
-            //await UploadImages(request.Slug!, request.ImageFiles, cancellationToken);
+            product = product ?? throw new Exception($"product cannot be found. ProductId: {request.Id}");
+
+            await UploadImages(request.Slug!, request.ImageFiles, cancellationToken);
 
             var productImages = request.Images?
                 .Select(img => new ProductImage
@@ -43,12 +48,6 @@ public static class UpdateProduct
                     Folder = request.Slug!,
                     Order = img.Order
                 }).ToList();
-
-            var product = _db.Products
-                .Include(p => p.Images)
-                .FirstOrDefault(p => p.Id == request.Id);
-
-            product = product ?? throw new Exception($"product cannot be found. ProductId: {request.Id}");
 
             product.Title = request.Title!;
             product.Description = request.Description!;
