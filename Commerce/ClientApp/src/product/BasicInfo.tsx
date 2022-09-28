@@ -1,5 +1,6 @@
-import { Card, CardContent, Box, Typography, InputBase } from "@mui/material";
+import { Card, CardContent, Box } from "@mui/material";
 import { useFormContext } from "react-hook-form";
+import { TextInput } from "../components/TextInput";
 
 export default function BasicInfo() {
   const {
@@ -10,48 +11,23 @@ export default function BasicInfo() {
     <Card>
       <CardContent>
         <Box mb="1rem">
-          <Typography mb="0.25rem">Title</Typography>
-          <InputBase
+          <TextInput
+            hasError={Boolean(errors.title)}
+            label="Title"
+            validationMessage={errors.title?.message as string}
             {...register("title", { required: "This field cannot be empty" })}
-            fullWidth
-            sx={{
-              border: errors.title ? "1px solid  red" : "1px solid #ccc",
-              borderRadius: "0.2rem",
-              padding: "0.25rem",
-            }}
-          />
-          {errors.title && errors.title.type === "required" && (
-            <Typography variant="body2" color="error">
-              {errors.title.message as string}
-            </Typography>
-          )}
-        </Box>
-        <Box mb="1rem">
-          <Typography mb="0.25rem">Description</Typography>
-          <InputBase
-            {...register("description")}
-            fullWidth
-            multiline
-            rows={8}
-            sx={{ border: "1px solid #ccc", borderRadius: "0.2rem" }}
           />
         </Box>
         <Box mb="1rem">
-          <Typography mb="0.25rem">Slug</Typography>
-          <InputBase
+          <TextInput {...register("description")} multiline rows={8} />
+        </Box>
+        <Box mb="1rem">
+          <TextInput
             {...register("slug", { required: "This field cannot be empty" })}
-            fullWidth
-            sx={{
-              border: errors.slug ? "1px solid  red" : "1px solid #ccc",
-              borderRadius: "0.2rem",
-              padding: "0.25rem",
-            }}
+            hasError={Boolean(errors.slug)}
+            label="Slug"
+            validationMessage={errors.slug?.message as string}
           />
-          {errors.slug && errors.slug.type === "required" && (
-            <Typography variant="body2" color="error">
-              {errors.slug.message as string}
-            </Typography>
-          )}
         </Box>
       </CardContent>
     </Card>
