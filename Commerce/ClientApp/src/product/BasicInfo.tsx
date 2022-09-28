@@ -5,6 +5,7 @@ import { TextInput } from "../components/TextInput";
 export default function BasicInfo() {
   const {
     register,
+    watch,
     formState: { errors },
   } = useFormContext();
   return (
@@ -15,7 +16,13 @@ export default function BasicInfo() {
             hasError={Boolean(errors.title)}
             label="Title"
             validationMessage={errors.title?.message as string}
-            {...register("title", { required: "This field cannot be empty" })}
+            {...register("title", {
+              required: "This field cannot be empty",
+              maxLength: {
+                value: 200,
+                message: "Title length cannot be more than 50 charecters",
+              },
+            })}
           />
         </Box>
         <Box mb="1rem">
@@ -27,6 +34,8 @@ export default function BasicInfo() {
             hasError={Boolean(errors.slug)}
             label="Slug"
             validationMessage={errors.slug?.message as string}
+            disabled
+            value={watch("title").toLowerCase().split(" ").join("-")}
           />
         </Box>
       </CardContent>

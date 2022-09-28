@@ -51,7 +51,7 @@ public static class UpdateProduct
                     Order = img.Order
                 }).ToList() : new List<ProductImage>();
 
-            await RemoveImages(product.Images, productImages);
+            await RemoveImages(product.Slug, product.Images, productImages);
 
             product.Title = request.Title!;
             product.Description = request.Description!;
@@ -63,13 +63,19 @@ public static class UpdateProduct
             return Unit.Value;
         }
 
-        private async Task RemoveImages(IEnumerable<ProductImage>? currentImages, IEnumerable<ProductImage> newImages)
+        private async Task RemoveImages(string folder, IEnumerable<ProductImage>? currentImages, IEnumerable<ProductImage> newImages)
         {
             if (currentImages?.Count() <= 0) return;
 
             var imagesToDelete = currentImages!
-            .Where(img => newImages.Select(i => i.FileName).Contains(img.FileName))
-            .Select(x => $"{x.Folder}/{x.FileName}").ToList();
+            .Select(img => img.FileName)
+            .Except(newImages.Select(img => img.FileName))
+            .Select(file => $"{folder}/{file}")
+            .ToList();
+
+            // var imagesToDelete = currentImages!
+            // .Where(img => newImages.Select(i => i.FileName).Contains(img.FileName))
+            // .Select(x => $"{x.Folder}/{x.FileName}").ToList();
 
             if (imagesToDelete?.Count > 0)
             {
