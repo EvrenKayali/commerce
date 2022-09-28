@@ -2,6 +2,7 @@ using Azure.Storage.Blobs;
 using Commerce.Api.BaseResponses;
 using Commerce.Data;
 using Commerce.Data.Entites;
+using Commerce.Services;
 using MediatR;
 
 namespace Commerce.Api.ProductApi.Command;
@@ -24,18 +25,19 @@ public static class AddProductWithImgages
 
     public class Handler : IRequestHandler<Request, Response>
     {
-        private readonly BlobServiceClient _blobServiceClient;
+        private readonly IStorageService _storage;
 
         private readonly CommerceDbContext _db;
 
-        public Handler(CommerceDbContext db, BlobServiceClient blobServiceClient)
+        public Handler(CommerceDbContext db, IStorageService storage)
         {
             _db = db;
-            _blobServiceClient = blobServiceClient;
+            _storage = storage;
         }
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            await UploadImages(request.Slug!, request.ImageFiles, cancellationToken);
+            if (request.ImageFiles?.Length > 0)
+                await _storage.UploadBatchAsync(request.Slug!, request.ImageFiles, cancellationToken);
 
             var productImages = request.Images?
                 .Select(img => new ProductImage
@@ -57,24 +59,6 @@ public static class AddProductWithImgages
             await _db.SaveChangesAsync(cancellationToken);
 
             return new Response { Id = product.Id };
-        }
-
-        private async Task UploadImages(string folderName, IFormFile[]? images, CancellationToken cancellationToken)
-        {
-            var container = _blobServiceClient.GetBlobContainerClient("products");
-            await container.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
-
-            if (images?.Length > 0)
-            {
-                foreach (var image in images)
-                {
-                    using var stream = new MemoryStream();
-                    await image.CopyToAsync(stream, cancellationToken);
-                    stream.Position = 0;
-                    var blobClient = container.GetBlobClient($"{folderName}/{image.FileName}");
-                    await blobClient.UploadAsync(stream, true, cancellationToken);
-                }
-            }
         }
     }
 }

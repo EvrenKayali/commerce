@@ -1,7 +1,7 @@
-using Azure.Storage.Blobs;
 using Commerce.Api.BaseResponses;
 using Commerce.Data;
 using Commerce.Data.Entites;
+using Commerce.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,14 +22,14 @@ public static class UpdateProduct
 
     public class Handler : IRequestHandler<Request, Unit>
     {
-        private readonly BlobServiceClient _blobServiceClient;
 
+        private readonly IStorageService _storage;
         private readonly CommerceDbContext _db;
 
-        public Handler(CommerceDbContext db, BlobServiceClient blobServiceClient)
+        public Handler(CommerceDbContext db, IStorageService storage)
         {
             _db = db;
-            _blobServiceClient = blobServiceClient;
+            _storage = storage;
         }
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
@@ -39,15 +39,19 @@ public static class UpdateProduct
 
             product = product ?? throw new Exception($"product cannot be found. ProductId: {request.Id}");
 
-            await UploadImages(request.Slug!, request.ImageFiles, cancellationToken);
+            if (request.ImageFiles?.Length > 0)
+                await _storage.UploadBatchAsync(request.Slug!, request.ImageFiles, cancellationToken);
 
-            var productImages = request.Images?
+
+            var productImages = request.Images != null ? request.Images
                 .Select(img => new ProductImage
                 {
                     FileName = img.FileName,
                     Folder = request.Slug!,
                     Order = img.Order
-                }).ToList();
+                }).ToList() : new List<ProductImage>();
+
+            await RemoveImages(product.Images, productImages);
 
             product.Title = request.Title!;
             product.Description = request.Description!;
@@ -59,21 +63,17 @@ public static class UpdateProduct
             return Unit.Value;
         }
 
-        private async Task UploadImages(string folderName, IFormFile[]? images, CancellationToken cancellationToken)
+        private async Task RemoveImages(IEnumerable<ProductImage>? currentImages, IEnumerable<ProductImage> newImages)
         {
-            var container = _blobServiceClient.GetBlobContainerClient("products");
-            await container.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
+            if (currentImages?.Count() <= 0) return;
 
-            if (images?.Length > 0)
+            var imagesToDelete = currentImages!
+            .Where(img => newImages.Select(i => i.FileName).Contains(img.FileName))
+            .Select(x => $"{x.Folder}/{x.FileName}").ToList();
+
+            if (imagesToDelete?.Count > 0)
             {
-                foreach (var image in images)
-                {
-                    using var stream = new MemoryStream();
-                    await image.CopyToAsync(stream, cancellationToken);
-                    stream.Position = 0;
-                    var blobClient = container.GetBlobClient($"{folderName}/{image.FileName}");
-                    await blobClient.UploadAsync(stream, true, cancellationToken);
-                }
+                await _storage.DeleteBatchAsync(imagesToDelete);
             }
         }
     }
