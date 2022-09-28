@@ -2,6 +2,7 @@ import { NoPhotography } from "@mui/icons-material";
 import {
   Box,
   Button,
+  CircularProgress,
   Paper,
   Stack,
   Table,
@@ -50,8 +51,15 @@ export default function Products() {
             <TableBody>
               {status === "loading" ? (
                 <TableRow>
-                  <TableCell>
-                    <span>loading....</span>
+                  <TableCell colSpan={10}>
+                    <Box
+                      height="20rem"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <CircularProgress />
+                    </Box>
                   </TableCell>
                 </TableRow>
               ) : (
