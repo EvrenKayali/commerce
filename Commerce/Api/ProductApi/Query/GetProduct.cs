@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Commerce.Api.ProductApi.Query;
 public static class GetProduct
 {
-    public record Request : IRequest<ProductBaseResponse>
+    public record Request : IRequest<ProductFormModel>
     {
         public int ProductId { get; set; }
     }
 
-    public class Handler : IRequestHandler<Request, ProductBaseResponse>
+    public class Handler : IRequestHandler<Request, ProductFormModel>
     {
         private readonly CommerceDbContext _db;
 
@@ -20,7 +20,7 @@ public static class GetProduct
             _db = db;
         }
 
-        public async Task<ProductBaseResponse> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ProductFormModel> Handle(Request request, CancellationToken cancellationToken)
         {
             var product = await _db.Products
                 .Include(p => p.Images)
@@ -32,10 +32,17 @@ public static class GetProduct
 
             var images = product.Images?
                 .OrderBy(img => img.Order)
-                .Select(p => new ProductImageBaseResponse(p.Id, $"{srcPrefix}/{p.Folder}/{p.FileName}", p.FileName))
+                .Select(p => new ProductImageBase { Id = p.Id, Src = $"{srcPrefix}/{p.Folder}/{p.FileName}", FileName = p.FileName })
                 .ToList();
 
-            return new ProductBaseResponse(product.Id, product.Title, product.Description, product.Slug, images);
+            return new ProductFormModel
+            {
+                Id = product.Id,
+                Title = product.Title,
+                Description = product.Description,
+                Slug = product.Slug,
+                Images = images
+            };
         }
     }
 }

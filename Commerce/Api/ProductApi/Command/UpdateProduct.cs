@@ -10,14 +10,8 @@ namespace Commerce.Api.ProductApi.Command;
 public static class UpdateProduct
 {
 
-    public record Request : IRequest<Unit>
+    public record Request : ProductFormModel, IRequest<Unit>
     {
-        public int Id { get; set; }
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public string? Slug { get; set; }
-        public IFormFile[]? ImageFiles { get; set; }
-        public List<ProductImageBaseRequest>? Images { get; set; }
     }
 
     public class Handler : IRequestHandler<Request, Unit>
@@ -72,10 +66,6 @@ public static class UpdateProduct
             .Except(newImages.Select(img => img.FileName))
             .Select(file => $"{folder}/{file}")
             .ToList();
-
-            // var imagesToDelete = currentImages!
-            // .Where(img => newImages.Select(i => i.FileName).Contains(img.FileName))
-            // .Select(x => $"{x.Folder}/{x.FileName}").ToList();
 
             if (imagesToDelete?.Count > 0)
             {

@@ -30,12 +30,16 @@ export default function BasicInfo() {
         </Box>
         <Box mb="1rem">
           <TextInput
-            {...register("slug", { required: "This field cannot be empty" })}
+            {...register("slug")}
             hasError={Boolean(errors.slug)}
             label="Slug"
             validationMessage={errors.slug?.message as string}
             disabled
-            value={watch("title").toLowerCase().split(" ").join("-")}
+            value={
+              watch("title")
+                ? watch("title").toLowerCase().split(" ").join("-")
+                : ""
+            }
           />
         </Box>
       </CardContent>

@@ -9,13 +9,9 @@ namespace Commerce.Api.ProductApi.Command;
 public static class AddProductWithImgages
 {
 
-    public record Request : IRequest<Response>
+    public record Request : ProductFormModel, IRequest<Response>
     {
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public string? Slug { get; set; }
-        public IFormFile[]? ImageFiles { get; set; }
-        public List<ProductImageBaseRequest>? Images { get; set; }
+
     }
 
     public record Response
