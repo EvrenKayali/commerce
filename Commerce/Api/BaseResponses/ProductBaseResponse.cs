@@ -1,6 +1,4 @@
-
 namespace Commerce.Api.BaseResponses;
-//ProductImageBasepublic record ProductBaseResponse(int Id, string Title, string Description, string Slug, List<ProductImageBaseResponse>? Images);
 
 public record ProductImageBase
 {

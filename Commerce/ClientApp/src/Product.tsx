@@ -5,7 +5,7 @@ import React, { useRef, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  GetProductByIdResponse,
+  ProductFormModel,
   useAddProductMutation,
   useProduct,
   useUpdateProductMutation,
@@ -19,7 +19,7 @@ import Variants from "./product/Variants";
 
 interface props {
   productId?: number;
-  formData?: GetProductByIdResponse;
+  formData?: ProductFormModel;
   header: string;
 }
 
@@ -27,7 +27,7 @@ function Form({ formData, header, productId }: props) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement>(null);
-  const methods = useForm<GetProductByIdResponse>({
+  const methods = useForm<ProductFormModel>({
     defaultValues: formData,
   });
 
@@ -53,7 +53,8 @@ function Form({ formData, header, productId }: props) {
   const { mutate: updateProduct, status: updateStatus } =
     useUpdateProductMutation();
 
-  const onSubmit = async (data: GetProductByIdResponse) => {
+  const onSubmit = async (data: ProductFormModel) => {
+    data.images = data.images?.map((i) => ({ ...i, id: i.isNew ? 0 : i.id }));
     const formData = serialize(data, {
       noFilesWithArrayNotation: true,
       indices: true,

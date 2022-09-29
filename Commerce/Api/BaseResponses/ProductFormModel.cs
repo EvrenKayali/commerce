@@ -8,5 +8,4 @@ public record ProductFormModel
     public string? Slug { get; set; }
     public List<ProductImageBase>? Images { get; set; }
     public IFormFile[]? ImageFiles { get; set; }
-
 }

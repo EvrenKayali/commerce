@@ -1,4 +1,3 @@
-using Azure.Storage.Blobs;
 using Commerce.Api.BaseResponses;
 using Commerce.Data;
 using Commerce.Data.Entites;
@@ -6,13 +5,10 @@ using Commerce.Services;
 using MediatR;
 
 namespace Commerce.Api.ProductApi.Command;
-public static class AddProductWithImgages
+public static class AddProduct
 {
 
-    public record Request : ProductFormModel, IRequest<Response>
-    {
-
-    }
+    public record Request : ProductFormModel, IRequest<Response> { }
 
     public record Response
     {

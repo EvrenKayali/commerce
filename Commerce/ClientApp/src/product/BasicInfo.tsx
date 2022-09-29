@@ -34,7 +34,6 @@ export default function BasicInfo() {
             hasError={Boolean(errors.slug)}
             label="Slug"
             validationMessage={errors.slug?.message as string}
-            disabled
             value={
               watch("title")
                 ? watch("title").toLowerCase().split(" ").join("-")

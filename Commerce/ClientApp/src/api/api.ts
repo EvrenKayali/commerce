@@ -2,23 +2,16 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Image } from "../components/SortableImageList";
 
-export interface ProductImage {
-  id: number;
-  folder: string;
-  fileName: string;
-  order: number;
-  src?: string;
-}
 export interface Product {
   id: number;
   title: string;
   description: string;
   slug: string;
   mainImageSrc?: string;
-  images?: ProductImage[];
+  images?: Image[];
 }
 
-export interface GetProductByIdResponse {
+export interface ProductFormModel {
   id: number;
   title: string;
   description: string;
@@ -36,7 +29,7 @@ export function useProducts() {
 
 export function useProduct({ id }: { id: number | undefined }) {
   const getProduct = async (id: number | undefined) => {
-    return (await axios.get<GetProductByIdResponse>(`Product/${id}`)).data;
+    return (await axios.get<ProductFormModel>(`Product/${id}`)).data;
   };
 
   return useQuery(["Product", id], () => getProduct(id), {
@@ -45,17 +38,16 @@ export function useProduct({ id }: { id: number | undefined }) {
 }
 export function useAddProductMutation() {
   const addProduct = async (product: FormData) => {
-    return (await axios.post<{ id: number }>("Product/addWithImages", product))
-      .data;
+    return (await axios.post<{ id: number }>("Product/add", product)).data;
   };
 
   return useMutation(addProduct);
 }
 
 export function useUpdateProductMutation() {
-  const addProduct = async (product: FormData) => {
+  const updateProduct = async (product: FormData) => {
     return (await axios.post<{ id: number }>("Product/update", product)).data;
   };
 
-  return useMutation(addProduct);
+  return useMutation(updateProduct);
 }

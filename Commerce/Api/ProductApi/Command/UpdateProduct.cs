@@ -9,14 +9,10 @@ namespace Commerce.Api.ProductApi.Command;
 
 public static class UpdateProduct
 {
-
-    public record Request : ProductFormModel, IRequest<Unit>
-    {
-    }
+    public record Request : ProductFormModel, IRequest<Unit> { }
 
     public class Handler : IRequestHandler<Request, Unit>
     {
-
         private readonly IStorageService _storage;
         private readonly CommerceDbContext _db;
 
@@ -25,6 +21,7 @@ public static class UpdateProduct
             _db = db;
             _storage = storage;
         }
+
         public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
         {
             var product = _db.Products
@@ -35,7 +32,6 @@ public static class UpdateProduct
 
             if (request.ImageFiles?.Length > 0)
                 await _storage.UploadBatchAsync(request.Slug!, request.ImageFiles, cancellationToken);
-
 
             var productImages = request.Images != null ? request.Images
                 .Select(img => new ProductImage
@@ -73,5 +69,4 @@ public static class UpdateProduct
             }
         }
     }
-
 }
