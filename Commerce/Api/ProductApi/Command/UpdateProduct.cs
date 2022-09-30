@@ -30,22 +30,19 @@ public static class UpdateProduct
 
             product = product ?? throw new Exception($"product cannot be found. ProductId: {request.Id}");
 
-            if (request.ImageFiles?.Length > 0)
-                await _storage.UploadBatchAsync(request.Slug!, request.ImageFiles, cancellationToken);
+            await ProcessImages(product, request, cancellationToken);
 
             var productImages = request.Images != null ? request.Images
                 .Select(img => new ProductImage
                 {
                     FileName = img.FileName,
-                    Folder = request.Slug!,
+                    Folder = request.Slug,
                     Order = img.Order
                 }).ToList() : new List<ProductImage>();
 
-            await RemoveImages(product.Slug, product.Images, productImages);
-
             product.Title = request.Title!;
             product.Description = request.Description!;
-            product.Slug = request.Slug!;
+            product.Slug = request.Slug;
             product.Images = productImages;
 
             await _db.SaveChangesAsync(cancellationToken);
@@ -53,19 +50,41 @@ public static class UpdateProduct
             return Unit.Value;
         }
 
-        private async Task RemoveImages(string folder, IEnumerable<ProductImage>? currentImages, IEnumerable<ProductImage> newImages)
+        private async Task ProcessImages(Product product, Request request, CancellationToken cancellationToken)
         {
-            if (currentImages?.Count() <= 0) return;
+            if (request.ImageFiles?.Length > 0)
+            {
+                await _storage.UploadBatchAsync(request.Slug, request.ImageFiles, cancellationToken);
+            }
 
-            var imagesToDelete = currentImages!
-            .Select(img => img.FileName)
-            .Except(newImages.Select(img => img.FileName))
-            .Select(file => $"{folder}/{file}")
-            .ToList();
+            var currentFileNames = product.Images?.Select(img => img.FileName).ToList();
+            var newFileNames = request.Images?.Select(img => img.FileName).ToList();
+
+            await RemoveImages(product.Slug, currentFileNames, newFileNames ?? new List<string>());
+
+            if (product.Slug != request.Slug && product.Images?.Count > 0)
+            {
+                await MoveImages(product.Slug, request.Slug, product.Images.Select(img => img.FileName).ToList());
+            }
+        }
+
+        private async Task RemoveImages(string folder, List<string>? currentImages, List<string> newImages)
+        {
+            if (currentImages?.Count <= 0) return;
+
+            var imagesToDelete = currentImages!.Except(newImages).Select(file => $"{folder}/{file}").ToList();
 
             if (imagesToDelete?.Count > 0)
             {
                 await _storage.DeleteBatchAsync(imagesToDelete);
+            }
+        }
+
+        private async Task MoveImages(string oldSlug, string newSlug, List<string> fileNames)
+        {
+            foreach (var file in fileNames)
+            {
+                await _storage.RenameAsync($"{newSlug}/{file}", $"{oldSlug}/{file}");
             }
         }
     }

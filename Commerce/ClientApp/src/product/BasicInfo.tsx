@@ -5,7 +5,6 @@ import { TextInput } from "../components/TextInput";
 export default function BasicInfo() {
   const {
     register,
-    watch,
     formState: { errors },
   } = useFormContext();
   return (
@@ -30,15 +29,10 @@ export default function BasicInfo() {
         </Box>
         <Box mb="1rem">
           <TextInput
-            {...register("slug")}
+            {...register("slug", { required: "This field cannot be empty" })}
             hasError={Boolean(errors.slug)}
             label="Slug"
             validationMessage={errors.slug?.message as string}
-            value={
-              watch("title")
-                ? watch("title").toLowerCase().split(" ").join("-")
-                : ""
-            }
           />
         </Box>
       </CardContent>

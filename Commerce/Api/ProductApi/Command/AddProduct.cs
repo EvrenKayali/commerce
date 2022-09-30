@@ -43,7 +43,7 @@ public static class AddProduct
             {
                 Title = request.Title!,
                 Description = request.Description!,
-                Slug = request.Slug!,
+                Slug = request.Slug,
                 Images = productImages
             };
 

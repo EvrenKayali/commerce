@@ -1,4 +1,5 @@
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace Commerce.Services;
 
@@ -9,6 +10,8 @@ public interface IStorageService
     Task UploadBatchAsync(string? folder, IFormFile[] contents, CancellationToken cancellationToken);
     Task DeleteAsync(string fileName);
     Task DeleteBatchAsync(List<string> fileNames);
+    Task<List<BlobItem>> GetDirectory(string folder);
+    Task RenameAsync(string newName, string oldName);
 }
 
 public class AzureBlobStorageService : IStorageService
@@ -60,5 +63,18 @@ public class AzureBlobStorageService : IStorageService
         }
     }
 
+    public async Task<List<BlobItem>> GetDirectory(string folder)
+    {
+        var results = _blobContainer.GetBlobsAsync(prefix: folder);
 
+        return await results.ToListAsync();
+    }
+
+    public async Task RenameAsync(string newName, string oldName)
+    {
+        var source = _blobContainer.GetBlobClient(oldName);
+        var target = _blobContainer.GetBlobClient(newName);
+        await target.StartCopyFromUriAsync(source.Uri);
+        await source.DeleteIfExistsAsync();
+    }
 }
