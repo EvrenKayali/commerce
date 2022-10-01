@@ -25,7 +25,7 @@ export default function Products() {
         <Box display="flex" justifyContent="flex-end" p=".5rem">
           <Button
             component={Link}
-            to="/product"
+            to="/products/new"
             variant="contained"
             color="primary"
           >
@@ -91,7 +91,7 @@ export default function Products() {
                         )}
                       </TableCell>
                       <TableCell>
-                        <Link to={`/product/${p.id}`}>{p.title}</Link>
+                        <Link to={`/products/${p.id}`}>{p.title}</Link>
                       </TableCell>
                       <TableCell>{p.description}</TableCell>
                       <TableCell>{p.slug}</TableCell>

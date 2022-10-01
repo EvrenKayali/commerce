@@ -60,7 +60,7 @@ export default function Images({ images, onChange }: props) {
                 <AddAPhoto sx={{ fontSize: "10rem" }} color="primary" />
               </Box>
               <Typography variant="body2" textAlign={"center"}>
-                Drag and drop images files to add new photes
+                Drop image files to here
               </Typography>
             </>
           )}

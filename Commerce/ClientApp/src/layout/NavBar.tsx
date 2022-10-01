@@ -6,7 +6,12 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Home as HomeIcon, Sell } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
+const linkStyles = {
+  "&.active .MuiTypography-root": { color: "secondary.main" },
+  "&.active .MuiListItemIcon-root": { color: "secondary.main" },
+} as const;
 
 export default function NavBar() {
   return (
@@ -16,11 +21,10 @@ export default function NavBar() {
         borderRight: "1px solid #a8a7a7",
         height: "100%",
         display: { xs: "none", sm: "block" },
-        maxWidth: "10rem",
       }}
     >
       <ListItem disablePadding>
-        <ListItemButton component={Link} to="/">
+        <ListItemButton component={NavLink} to="/home" sx={linkStyles}>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
@@ -35,7 +39,7 @@ export default function NavBar() {
         </ListItemButton>
       </ListItem>
       <ListItem disablePadding>
-        <ListItemButton component={Link} to="/products">
+        <ListItemButton component={NavLink} to="/products" sx={linkStyles}>
           <ListItemIcon>
             <Sell />
           </ListItemIcon>

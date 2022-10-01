@@ -20,9 +20,10 @@ function App() {
         <Box mt="1rem" width="100%" mr="2rem">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/products" element={<Products />} />
-            <Route path="/product" element={<Product />} />
-            <Route path="/product/:productId" element={<Product />} />
+            <Route path="/products/new" element={<Product />} />
+            <Route path="/products/:productId" element={<Product />} />
           </Routes>
         </Box>
       </Box>
