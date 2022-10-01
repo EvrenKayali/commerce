@@ -34,7 +34,7 @@ export default function Variants() {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5" mb="0.25rem">
+        <Typography variant="h6" mb="0.25rem">
           Variants
         </Typography>
         <FormControl>

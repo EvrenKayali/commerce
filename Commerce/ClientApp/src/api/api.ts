@@ -34,8 +34,10 @@ export function useProduct({ id }: { id: number | undefined }) {
 
   return useQuery(["Product", id], () => getProduct(id), {
     enabled: Boolean(id),
+    refetchOnWindowFocus: false,
   });
 }
+
 export function useAddProductMutation() {
   const addProduct = async (product: FormData) => {
     return (await axios.post<{ id: number }>("Product/add", product)).data;

@@ -1,4 +1,4 @@
-import { Typography, Button, Stack, Box, Snackbar, Alert } from "@mui/material";
+import { Typography, Stack, Box, Snackbar, Alert } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { serialize } from "object-to-formdata";
 import React, { useRef, useState } from "react";
@@ -16,6 +16,7 @@ import Images from "./product/Images";
 import { Save } from "@mui/icons-material";
 import { useQueryClient } from "@tanstack/react-query";
 import Variants from "./product/Variants";
+import { Status } from "./product/Status";
 
 interface props {
   productId?: number;
@@ -64,6 +65,7 @@ function Form({ formData, header, productId }: props) {
       updateProduct(formData, {
         onSuccess: () => {
           setAlert(true);
+          methods.setValue("imageFiles", null);
           queryClient.invalidateQueries(["Product", productId]);
           queryClient.invalidateQueries(["Products"]);
         },
@@ -71,6 +73,7 @@ function Form({ formData, header, productId }: props) {
     } else {
       addProduct(formData, {
         onSuccess: (data) => {
+          methods.setValue("imageFiles", null);
           queryClient.invalidateQueries(["Products"]);
           navigate(`/product/${data?.id}`);
         },
@@ -79,31 +82,35 @@ function Form({ formData, header, productId }: props) {
   };
 
   return (
-    <Box maxWidth="60rem">
+    <Box>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} ref={formRef}>
-          <Stack spacing={2}>
-            <Box display="flex" justifyContent="space-between">
-              <Typography variant="h5">{header}</Typography>
-              <LoadingButton
-                variant="contained"
-                type="submit"
-                loading={updateStatus === "loading" || addStatus === "loading"}
-                endIcon={<Save />}
-                loadingPosition="end"
-              >
-                Save
-              </LoadingButton>
-            </Box>
-            <BasicInfo />
-            <Images
-              images={methods.getValues("images") || []}
-              onChange={(imgs, files) => handleImageChange(imgs, files)}
-            />
-            {/* <Pricing /> */}
-            <Variants />
-          </Stack>
-          <Button type="submit">Save</Button>
+          <Box display="flex" justifyContent="space-between" mb="1rem">
+            <Typography variant="h5">{header}</Typography>
+            <LoadingButton
+              variant="contained"
+              type="submit"
+              loading={updateStatus === "loading" || addStatus === "loading"}
+              endIcon={<Save />}
+              loadingPosition="end"
+            >
+              Save
+            </LoadingButton>
+          </Box>
+          <Box display="flex">
+            <Stack spacing={2} width="50%" mr="2rem">
+              <BasicInfo />
+              <Images
+                images={methods.getValues("images") || []}
+                onChange={(imgs, files) => handleImageChange(imgs, files)}
+              />
+              {/* <Pricing /> */}
+              <Variants />
+            </Stack>
+            <Stack spacing={2} minWidth="30rem">
+              <Status />
+            </Stack>
+          </Box>
         </form>
         <ul>
           {methods.watch("imageFiles")?.map((f) => (

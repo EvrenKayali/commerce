@@ -42,7 +42,7 @@ export default function Images({ images, onChange }: props) {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5" mb="0.25rem">
+        <Typography variant="h6" mb="0.25rem">
           Images
         </Typography>
         <div
