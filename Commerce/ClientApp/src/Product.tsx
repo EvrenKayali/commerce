@@ -122,10 +122,10 @@ function Form({ formData, header, productId }: props) {
         open={alert}
         autoHideDuration={2000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Product Saved
+          Product Savedl successfully
         </Alert>
       </Snackbar>
     </Box>

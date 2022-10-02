@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Azure.Storage.Blobs;
 using Commerce.Data;
 using Commerce.Middleware;
 using Commerce.Services;
@@ -27,30 +26,32 @@ builder.Services.AddTransient<IStorageService, AzureBlobStorageService>();
 builder.Services.AddTransient<AuthMiddleware>();
 
 builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            }).AddCookie(options =>
-            {
-                options.Cookie.Name = "commerce";
-                options.SlidingExpiration = true;
-                options.Events.OnRedirectToLogin = context =>
-                {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    return Task.CompletedTask;
-                };
-            }).AddOpenIdConnect("keycloak", options =>
-            {
-                options.Authority = $"http://localhost:8080/realms/Test";
-                options.UsePkce = true;
-                options.ClientId = "commerce";
-                options.RequireHttpsMetadata = false;
-                options.ResponseType = OpenIdConnectResponseType.Code;
-                options.CallbackPath = new PathString("/callback");
-                options.Scope.Clear();
-                options.Scope.Add("openid");
-            });
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.Cookie.Name = "commerce";
+    options.SlidingExpiration = true;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+})
+.AddOpenIdConnect("keycloak", options =>
+{
+    options.Authority = $"http://localhost:8080/realms/Commerce";
+    options.UsePkce = true;
+    options.ClientId = "commerce";
+    options.RequireHttpsMetadata = false;
+    options.ResponseType = OpenIdConnectResponseType.Code;
+    options.CallbackPath = new PathString("/callback");
+    options.Scope.Clear();
+    options.Scope.Add("openid");
+});
 
 var app = builder.Build();
 
