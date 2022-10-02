@@ -2,10 +2,12 @@ using Commerce.Api.BaseResponses;
 using Commerce.Api.ProductApi.Command;
 using Commerce.Api.ProductApi.Query;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Commerce.Api.ProductApi;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class ProductController : ControllerBase

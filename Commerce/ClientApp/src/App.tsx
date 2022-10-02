@@ -6,8 +6,34 @@ import Products from "./Products";
 import NavBar from "./layout/NavBar";
 import Header from "./layout/Header";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // @ts-ignore err: unknown -> err: AxiosError
+      retry: (failureCount, err: AxiosError) => {
+        if (err.response?.status === 401) {
+          return false; // do not retry, trigger error
+        }
+
+        // otherwise, restore default
+        const defaultRetry = new QueryClient().getDefaultOptions().queries
+          ?.retry;
+
+        return Number.isSafeInteger(defaultRetry)
+          ? failureCount < (defaultRetry ?? 0)
+          : false;
+      },
+      //@ts-ignore err: unknown -> err: AxiosError
+      onError: (err: AxiosError) => {
+        if (err.response?.status === 401) {
+          window.location.href = `/Login?returnURL=${window.location}`;
+        }
+      },
+    },
+  },
+});
 
 function App() {
   return (

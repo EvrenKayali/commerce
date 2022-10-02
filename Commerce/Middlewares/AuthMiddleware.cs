@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Commerce.Middleware;
 public class AuthMiddleware : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        if (context.Request.Path == "/login" || context.User.Identity is null || !context.User.Identity.IsAuthenticated)
+        if (context.Request.Path == "/login")
         {
             // await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            var returnUri = "/";
-
+            var returnUri = context.Request.Query["returnURL"].ToString();
             await context.ChallengeAsync("keycloak", new AuthenticationProperties() { RedirectUri = returnUri });
             return;
         }

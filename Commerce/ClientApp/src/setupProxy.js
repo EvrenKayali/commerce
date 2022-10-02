@@ -7,7 +7,7 @@ const target = env.ASPNETCORE_HTTPS_PORT
   ? env.ASPNETCORE_URLS.split(";")[0]
   : "http://localhost:23493";
 
-const context = ["/Product"];
+const context = ["/Product", "/Login", "/callback"];
 
 module.exports = function (app) {
   const appProxy = createProxyMiddleware(context, {

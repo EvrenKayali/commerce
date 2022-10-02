@@ -34,9 +34,15 @@ builder.Services.AddAuthentication(options =>
             }).AddCookie(options =>
             {
                 options.Cookie.Name = "commerce";
+                options.SlidingExpiration = true;
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                };
             }).AddOpenIdConnect("keycloak", options =>
             {
-                options.Authority = $"http://localhost:8080/realms/Test%20Realm";
+                options.Authority = $"http://localhost:8080/realms/Test";
                 options.UsePkce = true;
                 options.ClientId = "commerce";
                 options.RequireHttpsMetadata = false;
@@ -55,14 +61,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseMiddleware<AuthMiddleware>();
 
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
