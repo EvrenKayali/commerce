@@ -17,6 +17,7 @@ import { Save } from "@mui/icons-material";
 import { useQueryClient } from "@tanstack/react-query";
 import Variants from "./product/Variants";
 import { Status } from "./product/Status";
+import { Organization } from "./product/Organization";
 
 interface props {
   productId?: number;
@@ -109,6 +110,7 @@ function Form({ formData, header, productId }: props) {
             </Stack>
             <Stack spacing={2} minWidth="30rem">
               <Status />
+              <Organization />
             </Stack>
           </Box>
         </form>

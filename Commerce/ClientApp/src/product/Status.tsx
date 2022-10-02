@@ -4,7 +4,7 @@ export function Status() {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5" mb="0.25rem">
+        <Typography variant="h6" mb="0.25rem">
           Product Status
         </Typography>
         <Select defaultValue={true} size="small" fullWidth>
