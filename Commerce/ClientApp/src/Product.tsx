@@ -15,7 +15,7 @@ import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import { Save } from "@mui/icons-material";
 import { useQueryClient } from "@tanstack/react-query";
-import Variants from "./product/Variants";
+import Options from "./product/Options";
 import { Status } from "./product/Status";
 import { Organization } from "./product/Organization";
 
@@ -61,7 +61,6 @@ function Form({ formData, header, productId }: props) {
       noFilesWithArrayNotation: true,
       indices: true,
     });
-
     if (productId && productId > 0) {
       updateProduct(formData, {
         onSuccess: () => {
@@ -106,7 +105,7 @@ function Form({ formData, header, productId }: props) {
                 onChange={(imgs, files) => handleImageChange(imgs, files)}
               />
               {/* <Pricing /> */}
-              <Variants />
+              <Options />
             </Stack>
             <Stack spacing={2} minWidth="30rem">
               <Status />
@@ -139,6 +138,20 @@ export const Product: React.FC = () => {
   const productId = parseInt(params.productId as string);
 
   const { data: product } = useProduct({ id: productId });
+
+  let attributes = {
+    color: ["Red", "Blue"],
+    sizes: ["Small", "Medium", "Large"],
+  };
+
+  let attrs = [];
+
+  for (const [attr, values] of Object.entries(attributes))
+    attrs.push(values.map((v) => ({ [attr]: v })));
+
+  attrs = attrs.reduce((a, b) =>
+    a.flatMap((d) => b.map((e) => ({ ...d, ...e })))
+  );
 
   return !productId || product ? (
     <Form

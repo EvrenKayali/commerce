@@ -2,6 +2,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Image } from "../components/SortableImageList";
 
+interface ProductOption {
+  name: string;
+  values: string[];
+}
 export interface Product {
   id: number;
   title: string;
@@ -18,6 +22,7 @@ export interface ProductFormModel {
   slug: string;
   imageFiles?: File[] | null;
   images?: Image[];
+  options?: ProductOption[];
 }
 
 export function useProducts() {

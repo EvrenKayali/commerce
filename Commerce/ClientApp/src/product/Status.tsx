@@ -8,8 +8,8 @@ export function Status() {
           Product Status
         </Typography>
         <Select defaultValue={true} size="small" fullWidth>
+          <MenuItem value="false">Draft</MenuItem>
           <MenuItem value="true">Active</MenuItem>
-          <MenuItem value="false">Inactive</MenuItem>
         </Select>
         <Typography variant="body2" mt=".25rem">
           This product will be shown in the web page
