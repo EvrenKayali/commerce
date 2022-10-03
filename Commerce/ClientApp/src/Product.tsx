@@ -2,7 +2,7 @@ import { Typography, Stack, Box, Snackbar, Alert } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { serialize } from "object-to-formdata";
 import React, { useRef, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ProductFormModel,
@@ -105,7 +105,15 @@ function Form({ formData, header, productId }: props) {
                 onChange={(imgs, files) => handleImageChange(imgs, files)}
               />
               {/* <Pricing /> */}
-              <Options />
+              <Controller
+                name="options"
+                render={({ field }) => (
+                  <Options
+                    options={methods.getValues("options")}
+                    onChange={(val) => methods.setValue("options", val)}
+                  />
+                )}
+              />
             </Stack>
             <Stack spacing={2} minWidth="30rem">
               <Status />

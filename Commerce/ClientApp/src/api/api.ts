@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Image } from "../components/SortableImageList";
 
-interface ProductOption {
+export interface ProductOption {
   name: string;
   values: string[];
 }
