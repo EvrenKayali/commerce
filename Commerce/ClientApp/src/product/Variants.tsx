@@ -1,5 +1,14 @@
 import { AddPhotoAlternate } from "@mui/icons-material";
-import { Card, CardContent, Typography, Box, Divider } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Divider,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+} from "@mui/material";
 import { useState } from "react";
 import { ProductVariant } from "../api/api";
 import { ImageSelectionDialog } from "../components/ImageSelectionDialog";
@@ -14,6 +23,7 @@ function VariantItem({ variant, onImageAdd }: VariantItemProps) {
   return (
     <Box display="flex" alignItems="center" justifyContent="space-between">
       <Box display="flex" alignItems="center">
+        <Checkbox />
         {!variant.image ? (
           <Box
             onClick={onImageAdd}
@@ -72,6 +82,17 @@ export function Variants({ items, images, onChange }: props) {
         <Typography variant="h6" mb="1rem">
           Variants
         </Typography>
+
+        <FormControl sx={{ ml: "10px", mb: "1rem" }}>
+          <FormControlLabel
+            control={<Checkbox />}
+            label={
+              <Typography>
+                <strong>Showing {items?.length} variants</strong>
+              </Typography>
+            }
+          />
+        </FormControl>
         {items.map((item, idx) => (
           <Box key={idx}>
             <VariantItem
@@ -81,6 +102,7 @@ export function Variants({ items, images, onChange }: props) {
                 setSelectedVariant(item.name);
               }}
             />
+
             <Divider sx={{ my: "1rem" }} />
           </Box>
         ))}
