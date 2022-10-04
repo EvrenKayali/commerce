@@ -19,22 +19,27 @@ import Options from "./product/Options";
 import { Status } from "./product/Status";
 import { Organization } from "./product/Organization";
 import { ClientProductOption } from "./components/OptionInput";
+import { Variants } from "./product/Variants";
+
+function cartesianProduct<T>(...allEntries: T[][]): T[][] {
+  return allEntries.reduce<T[][]>(
+    (results, entries) =>
+      results
+        .map((result) => entries.map((entry) => [...result, entry]))
+        .reduce((subResults, result) => [...subResults, ...result], []),
+    [[]]
+  );
+}
+
+function generateVariants(cartasian: string[][]) {
+  return cartasian.map((i) => i.join(" / ")).map((x) => ({ name: x }));
+}
 
 export const Product: React.FC = () => {
   let params = useParams();
   const productId = parseInt(params.productId as string);
 
   const { data: product } = useProduct({ id: productId });
-
-  function cartesianProduct<T>(...allEntries: T[][]): T[][] {
-    return allEntries.reduce<T[][]>(
-      (results, entries) =>
-        results
-          .map((result) => entries.map((entry) => [...result, entry]))
-          .reduce((subResults, result) => [...subResults, ...result], []),
-      [[]]
-    );
-  }
 
   interface props {
     productId?: number;
@@ -102,8 +107,9 @@ export const Product: React.FC = () => {
       .watch("options")
       ?.map((opt) => opt.values.filter((val) => Boolean(val)));
 
-    const prod = eee && cartesianProduct(...eee);
-    console.log(prod);
+    const prod = eee ? cartesianProduct(...eee) : [];
+
+    methods.setValue("variants", generateVariants(prod));
 
     return (
       <Box>
@@ -155,6 +161,10 @@ export const Product: React.FC = () => {
                       onChange={(val) => methods.setValue("options", val)}
                     />
                   )}
+                />
+                <Variants
+                  items={methods.getValues("variants") ?? []}
+                  images={methods.getValues("images")}
                 />
               </Stack>
               <Stack spacing={2} minWidth="30rem">

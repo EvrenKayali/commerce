@@ -38,7 +38,8 @@ export default function Options({
   };
 
   const handleOptionAdd = () => {
-    onChange([...(options ?? []), { name: "", values: [""], editMode: true }]);
+    const opts = [...(options ?? [])];
+    onChange([...opts, { name: "", values: [""], editMode: true }]);
   };
 
   return (

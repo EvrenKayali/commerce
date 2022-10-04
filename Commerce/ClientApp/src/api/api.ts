@@ -29,12 +29,14 @@ export interface ProductFormModel {
   imageFiles?: File[] | null;
   images?: Image[];
   options?: ProductOption[];
+  variants?: ProductVariant[];
 }
 
 export interface ProductVariant {
-  id: number;
-  optionAttributes: VariantOptionAttribute[];
-  image: string;
+  id?: number;
+  name: string;
+  optionAttributes?: VariantOptionAttribute[];
+  image?: string;
 }
 
 export function useProducts() {
