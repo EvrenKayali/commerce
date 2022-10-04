@@ -13,14 +13,10 @@ import { ClientProductOption, OptionInput } from "../components/OptionInput";
 
 export default function Options({
   options,
-  onEdit,
   onChange,
-  onDelete,
 }: {
   onChange: (options: ClientProductOption[]) => void;
   options?: ClientProductOption[];
-  onEdit: (idx: number) => void;
-  onDelete: (idx: number) => void;
 }) {
   const handleVariantChecked = (checked: boolean) => {
     if (!checked) {
@@ -28,6 +24,19 @@ export default function Options({
     } else {
       onChange([{ name: "", values: [""], editMode: true }]);
     }
+  };
+
+  const handleEdit = (idx: number) => {
+    //closes other edits. Change from here...
+    const modifiedOptions = options?.map((opt, index) => ({
+      ...opt,
+      editMode: index === idx,
+    }));
+    modifiedOptions && onChange(modifiedOptions);
+  };
+
+  const handleRemove = (idx: number) => {
+    options && onChange(options?.filter((_, i) => idx !== i));
   };
 
   const handleOptionChange = (val: ClientProductOption, idx: number) => {
@@ -70,8 +79,8 @@ export default function Options({
             {options?.map((opt, idx) => (
               <Box mt="1rem" key={idx}>
                 <OptionInput
-                  onDelete={() => onDelete(idx)}
-                  onEdit={() => onEdit(idx)}
+                  onDelete={() => handleRemove(idx)}
+                  onEdit={() => handleEdit(idx)}
                   option={opt}
                   editMode={opt.editMode}
                   onCompleteEdit={(val) =>

@@ -103,14 +103,6 @@ export const Product: React.FC = () => {
       }
     };
 
-    const eee = methods
-      .watch("options")
-      ?.map((opt) => opt.values.filter((val) => Boolean(val)));
-
-    const prod = eee ? cartesianProduct(...eee) : [];
-
-    methods.setValue("variants", generateVariants(prod));
-
     return (
       <Box>
         <FormProvider {...methods}>
@@ -137,35 +129,42 @@ export const Product: React.FC = () => {
                 {/* <Pricing /> */}
                 <Controller
                   name="options"
+                  control={methods.control}
                   render={({ field }) => (
                     <Options
-                      onEdit={(idx) => {
-                        const currentVals = [
-                          ...(methods.getValues(
-                            "options"
-                          ) as ClientProductOption[]),
-                        ];
-
-                        currentVals[idx].editMode = true;
-                        methods.setValue("options", currentVals);
-                      }}
-                      onDelete={(idx) => {
-                        const filtered = methods
-                          .getValues("options")
-                          ?.filter((_, i) => idx !== i);
-                        methods.setValue("options", filtered);
-                      }}
                       options={
                         methods.getValues("options") as ClientProductOption[]
                       }
-                      onChange={(val) => methods.setValue("options", val)}
+                      onChange={(options) => {
+                        field.onChange(options);
+
+                        const valuesOnly = options?.map((opt) =>
+                          opt.values.filter((val) => Boolean(val))
+                        );
+
+                        if (!!valuesOnly.length) {
+                          const prod = cartesianProduct(...valuesOnly);
+                          methods.setValue("variants", generateVariants(prod));
+                        } else {
+                          methods.setValue("variants", []);
+                        }
+                      }}
                     />
                   )}
                 />
-                <Variants
-                  items={methods.getValues("variants") ?? []}
-                  images={methods.getValues("images")}
-                />
+                {!!methods.watch("variants")?.length && (
+                  <Controller
+                    name="variants"
+                    control={methods.control}
+                    render={({ field }) => (
+                      <Variants
+                        onChange={field.onChange}
+                        items={methods.getValues("variants") ?? []}
+                        images={methods.getValues("images")}
+                      />
+                    )}
+                  />
+                )}
               </Stack>
               <Stack spacing={2} minWidth="30rem">
                 <Status />

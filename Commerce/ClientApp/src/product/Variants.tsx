@@ -1,41 +1,45 @@
-import { AddPhotoAlternate, Close } from "@mui/icons-material";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Divider,
-  DialogTitle,
-  Dialog,
-  IconButton,
-  DialogContent,
-} from "@mui/material";
+import { AddPhotoAlternate } from "@mui/icons-material";
+import { Card, CardContent, Typography, Box, Divider } from "@mui/material";
 import { useState } from "react";
 import { ProductVariant } from "../api/api";
-import { Image } from "../components/SortableImageList";
+import { ImageSelectionDialog } from "../components/ImageSelectionDialog";
+import { SelectableImage } from "../components/ImageSelector";
 
-function VariantItem({
-  variant,
-  onImageAdd,
-}: {
+interface VariantItemProps {
   variant: ProductVariant;
   onImageAdd: () => void;
-}) {
+}
+
+function VariantItem({ variant, onImageAdd }: VariantItemProps) {
   return (
     <Box display="flex" alignItems="center" justifyContent="space-between">
       <Box display="flex" alignItems="center">
-        <Box
-          onClick={onImageAdd}
-          width="75px"
-          height="75px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          sx={{ border: "1px dashed black", cursor: "pointer" }}
-          mr="1rem"
-        >
-          <AddPhotoAlternate fontSize="large" />
-        </Box>
+        {!variant.image ? (
+          <Box
+            onClick={onImageAdd}
+            width="75px"
+            height="75px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ border: "1px dashed black", cursor: "pointer" }}
+            mr="1rem"
+          >
+            <AddPhotoAlternate fontSize="large" />
+          </Box>
+        ) : (
+          <img
+            src={variant.image}
+            alt=""
+            style={{
+              width: "75px",
+              height: "75px",
+              objectFit: "cover",
+              marginRight: "1rem",
+            }}
+          />
+        )}
+
         <Typography>{variant.name}</Typography>
       </Box>
       <Typography>Lorem ipsum</Typography>
@@ -45,11 +49,23 @@ function VariantItem({
 
 export interface props {
   items: ProductVariant[];
-  images?: Image[];
+  images?: SelectableImage[];
+  onChange: (variants: ProductVariant[]) => void;
 }
 
-export function Variants({ items, images }: props) {
+export function Variants({ items, images, onChange }: props) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState<string | undefined>();
+
+  const handleImageSelected = (imgSrc: string) => {
+    const modifiedItems = items.map((i) => ({
+      ...i,
+      image: i.name === selectedVariant ? imgSrc : i.image,
+    }));
+    setDialogOpen(false);
+
+    onChange(modifiedItems);
+  };
   return (
     <Card>
       <CardContent>
@@ -60,42 +76,21 @@ export function Variants({ items, images }: props) {
           <Box key={idx}>
             <VariantItem
               variant={item}
-              onImageAdd={() => setDialogOpen(true)}
+              onImageAdd={() => {
+                setDialogOpen(true);
+                setSelectedVariant(item.name);
+              }}
             />
             <Divider sx={{ my: "1rem" }} />
           </Box>
         ))}
       </CardContent>
-      <Dialog open={dialogOpen}>
-        <DialogTitle sx={{ m: 0, p: 2 }}>
-          Edit Images
-          <IconButton
-            onClick={() => setDialogOpen(false)}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-            }}
-          >
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers>
-          {images?.map((image) => (
-            <img
-              src={image.src}
-              alt=""
-              style={{
-                width: "150px",
-                height: "150px",
-                objectFit: "cover",
-                margin: "1rem",
-              }}
-            />
-          ))}
-        </DialogContent>
-      </Dialog>
+      <ImageSelectionDialog
+        onDone={(src) => handleImageSelected(src)}
+        isOpen={dialogOpen}
+        images={images}
+        onDialogClose={() => setDialogOpen(false)}
+      />
     </Card>
   );
 }
