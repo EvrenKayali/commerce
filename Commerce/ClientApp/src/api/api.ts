@@ -6,6 +6,12 @@ export interface ProductOption {
   name: string;
   values: string[];
 }
+
+export interface VariantOptionAttribute {
+  name: string;
+  value: string;
+}
+
 export interface Product {
   id: number;
   title: string;
@@ -23,6 +29,12 @@ export interface ProductFormModel {
   imageFiles?: File[] | null;
   images?: Image[];
   options?: ProductOption[];
+}
+
+export interface ProductVariant {
+  id: number;
+  optionAttributes: VariantOptionAttribute[];
+  image: string;
 }
 
 export function useProducts() {

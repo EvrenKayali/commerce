@@ -49,7 +49,10 @@ export function OptionInput({
 
   const handleEditComplete = () => {
     setOptionValues(optionValues.filter((val) => val));
-    onCompleteEdit({ name: optionName, values: optionValues });
+    onCompleteEdit({
+      name: optionName,
+      values: optionValues.filter((val) => Boolean(val)),
+    });
   };
 
   const handleEditStart = () => {

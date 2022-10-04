@@ -25,7 +25,12 @@ export default function BasicInfo() {
           />
         </Box>
         <Box mb="1rem">
-          <TextInput {...register("description")} multiline rows={8} />
+          <TextInput
+            label="Description"
+            {...register("description")}
+            multiline
+            rows={8}
+          />
         </Box>
         <Box mb="1rem">
           <TextInput
