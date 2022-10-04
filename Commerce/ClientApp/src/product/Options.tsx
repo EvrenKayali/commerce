@@ -9,24 +9,28 @@ import {
   Checkbox,
   Divider,
 } from "@mui/material";
-import { useState } from "react";
-import { ProductOption } from "../api/api";
-import { OptionInput } from "../components/OptionInput";
+import { ClientProductOption, OptionInput } from "../components/OptionInput";
 
 export default function Options({
   options,
+  onEdit,
   onChange,
+  onDelete,
 }: {
-  onChange: (options: ProductOption[]) => void;
-  options?: ProductOption[];
+  onChange: (options: ClientProductOption[]) => void;
+  options?: ClientProductOption[];
+  onEdit: (idx: number) => void;
+  onDelete: (idx: number) => void;
 }) {
-  const [hasOptions, setHasOptions] = useState(false);
-
   const handleVariantChecked = (checked: boolean) => {
-    setHasOptions(checked);
+    if (!checked) {
+      onChange([]);
+    } else {
+      onChange([{ name: "", values: [""], editMode: true }]);
+    }
   };
 
-  const handleOptionChange = (val: ProductOption, idx: number) => {
+  const handleOptionChange = (val: ClientProductOption, idx: number) => {
     const opts = [...(options ?? [])];
     opts[idx] = val;
 
@@ -34,8 +38,7 @@ export default function Options({
   };
 
   const handleOptionAdd = () => {
-    const a = [...(options ?? []), { name: "", values: [""] }];
-    onChange(a);
+    onChange([...(options ?? []), { name: "", values: [""], editMode: true }]);
   };
 
   return (
@@ -48,7 +51,7 @@ export default function Options({
           <FormControlLabel
             control={
               <Checkbox
-                checked={hasOptions}
+                checked={Boolean(options?.length)}
                 onChange={(_, checked) => handleVariantChecked(checked)}
               />
             }
@@ -60,27 +63,36 @@ export default function Options({
             }
           />
         </FormControl>
-        {hasOptions && (
+        {Boolean(options?.length) && (
           <Box my="1rem">
             <Divider />
             {options?.map((opt, idx) => (
-              <OptionInput
-                option={opt}
-                key={idx}
-                onCompleteEdit={(val) => handleOptionChange(val, idx)}
-              />
+              <Box mt="1rem" key={idx}>
+                <OptionInput
+                  onDelete={() => onDelete(idx)}
+                  onEdit={() => onEdit(idx)}
+                  option={opt}
+                  editMode={opt.editMode}
+                  onCompleteEdit={(val) =>
+                    handleOptionChange(val as ClientProductOption, idx)
+                  }
+                />
+                <Divider sx={{ mt: "1rem" }} />
+              </Box>
             ))}
-            <Button
-              variant="outlined"
-              onClick={handleOptionAdd}
-              sx={{
-                borderColor: "#ccc",
-                color: "#000",
-                marginTop: "1rem",
-              }}
-            >
-              Add another option
-            </Button>
+            <Box>
+              <Button
+                variant="outlined"
+                onClick={handleOptionAdd}
+                sx={{
+                  borderColor: "#ccc",
+                  color: "#000",
+                  marginTop: "1rem",
+                }}
+              >
+                Add another option
+              </Button>
+            </Box>
           </Box>
         )}
       </CardContent>

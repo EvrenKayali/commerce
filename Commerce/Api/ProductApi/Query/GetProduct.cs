@@ -41,7 +41,8 @@ public static class GetProduct
                 Title = product.Title,
                 Description = product.Description,
                 Slug = product.Slug,
-                Images = images
+                Images = images,
+                Options = new List<ProductOption> { { new ProductOption { Name = "Color", Values = new string[] { "Red", "Yellow", "Blue" } } } }
             };
         }
     }

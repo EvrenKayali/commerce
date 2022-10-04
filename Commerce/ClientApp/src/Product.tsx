@@ -18,6 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Options from "./product/Options";
 import { Status } from "./product/Status";
 import { Organization } from "./product/Organization";
+import { ClientProductOption } from "./components/OptionInput";
 
 interface props {
   productId?: number;
@@ -109,7 +110,25 @@ function Form({ formData, header, productId }: props) {
                 name="options"
                 render={({ field }) => (
                   <Options
-                    options={methods.getValues("options")}
+                    onEdit={(idx) => {
+                      const currentVals = [
+                        ...(methods.getValues(
+                          "options"
+                        ) as ClientProductOption[]),
+                      ];
+
+                      currentVals[idx].editMode = true;
+                      methods.setValue("options", currentVals);
+                    }}
+                    onDelete={(idx) => {
+                      const filtered = methods
+                        .getValues("options")
+                        ?.filter((_, i) => idx !== i);
+                      methods.setValue("options", filtered);
+                    }}
+                    options={
+                      methods.getValues("options") as ClientProductOption[]
+                    }
                     onChange={(val) => methods.setValue("options", val)}
                   />
                 )}
@@ -147,19 +166,19 @@ export const Product: React.FC = () => {
 
   const { data: product } = useProduct({ id: productId });
 
-  let attributes = {
-    color: ["Red", "Blue"],
-    sizes: ["Small", "Medium", "Large"],
-  };
+  // let attributes = {
+  //   color: ["Red", "Blue"],
+  //   sizes: ["Small", "Medium", "Large"],
+  // };
 
-  let attrs = [];
+  // let attrs = [];
 
-  for (const [attr, values] of Object.entries(attributes))
-    attrs.push(values.map((v) => ({ [attr]: v })));
+  // for (const [attr, values] of Object.entries(attributes))
+  //   attrs.push(values.map((v) => ({ [attr]: v })));
 
-  attrs = attrs.reduce((a, b) =>
-    a.flatMap((d) => b.map((e) => ({ ...d, ...e })))
-  );
+  // attrs = attrs.reduce((a, b) =>
+  //   a.flatMap((d) => b.map((e) => ({ ...d, ...e })))
+  // );
 
   return !productId || product ? (
     <Form

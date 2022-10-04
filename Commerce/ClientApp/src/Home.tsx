@@ -15,14 +15,12 @@ export default function Home() {
   return (
     <>
       <h3>Hello World!!!!</h3>
-      <Card sx={{ width: "60rem" }}>
+      {/* <Card sx={{ width: "60rem" }}>
         <CardContent>
           {options.map((opt, idx) => (
             <OptionInput
               option={opt}
-              onCompleteEdit={(opt) => {
-                handleOptionChange(opt, idx);
-              }}
+              onCompleteEdit={(opt) => {handleOptionChange(opt, idx)}}
             />
           ))}
         </CardContent>
@@ -32,7 +30,7 @@ export default function Home() {
         >
           Add New
         </Button>
-      </Card>
+      </Card> */}
     </>
   );
 }

@@ -4,14 +4,21 @@ import React, { useState } from "react";
 import { ProductOption } from "../api/api";
 import { TextInput } from "./TextInput";
 
+export type ClientProductOption = ProductOption & { editMode?: boolean };
+
 export function OptionInput({
   option,
+  editMode,
   onCompleteEdit,
+  onEdit,
+  onDelete,
 }: {
-  option: ProductOption;
+  editMode?: boolean;
+  option: ClientProductOption;
   onCompleteEdit: (val: ProductOption) => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }) {
-  const [editMode, setEditMode] = useState(true);
   const [optionName, setOptionName] = useState(option.name);
   const [optionValues, setOptionValues] = useState<string[]>(option.values);
 
@@ -42,24 +49,29 @@ export function OptionInput({
 
   const handleEditComplete = () => {
     setOptionValues(optionValues.filter((val) => val));
-    setEditMode(false);
     onCompleteEdit({ name: optionName, values: optionValues });
   };
 
   const handleEditStart = () => {
-    setEditMode(true);
     setOptionValues([...optionValues, ""]);
+    onEdit();
   };
 
   return (
     <>
       {editMode && (
         <>
-          <TextInput
-            label="Option name"
-            value={optionName}
-            onChange={(e) => setOptionName(e.currentTarget.value)}
-          />
+          <Typography sx={{ marginBottom: ".25rem" }}>Option name</Typography>
+          <Box display="flex">
+            <TextInput
+              value={optionName}
+              onChange={(e) => setOptionName(e.currentTarget.value)}
+            />
+            <IconButton onClick={onDelete} tabIndex={-1}>
+              <DeleteForever />
+            </IconButton>
+          </Box>
+
           <Box mt="1rem">
             <Typography sx={{ marginBottom: ".25rem" }}>
               Option values
@@ -89,11 +101,15 @@ export function OptionInput({
       )}
       {editMode || (
         <>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="flex-start"
+          >
             <Typography>
               <strong>{optionName}</strong>
             </Typography>
-            <Button variant="outlined" onClick={handleEditStart}>
+            <Button variant="outlined" size="small" onClick={handleEditStart}>
               Edit
             </Button>
           </Box>
