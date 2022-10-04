@@ -34,8 +34,9 @@ export default function Images({ images, onChange }: props) {
         fileName: file.name,
         isNew: true,
       }));
+
       setFiles(acceptedFiles);
-      onChange([...images, ...newImageFiles], acceptedFiles);
+      onChange([...images, ...newImageFiles], [...files, ...acceptedFiles]);
     }
   }
 
