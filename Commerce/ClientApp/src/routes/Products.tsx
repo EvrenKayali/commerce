@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useProducts } from "./api/api";
+import { useProducts } from "../api/api";
 
 export default function Products() {
   const { status, data: products } = useProducts();
