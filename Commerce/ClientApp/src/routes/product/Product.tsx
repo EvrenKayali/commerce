@@ -9,16 +9,16 @@ import {
   useAddProductMutation,
   useProduct,
   useUpdateProductMutation,
-} from "../api/api";
-import { Image } from "../components/SortableImageList";
-import BasicInfo from "./product/BasicInfo";
-import Images from "./product/Images";
+} from "../../api/api";
+import { Image } from "../../components/SortableImageList";
+import BasicInfo from "./BasicInfo";
+import Images from "./Images";
 import { Save } from "@mui/icons-material";
 import { useQueryClient } from "@tanstack/react-query";
-import { Status } from "./product/Status";
-import { Organization } from "./product/Organization";
-import { Variants } from "./product/Variants";
-import { OptionsFormPart } from "./product/Options";
+import { Status } from "./Status";
+import { Organization } from "./Organization";
+import { Variants } from "./Variants";
+import { OptionsFormPart } from "./Options";
 
 interface props {
   productId?: number;
