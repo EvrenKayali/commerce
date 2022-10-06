@@ -2,8 +2,8 @@ import { AddAPhoto } from "@mui/icons-material";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
-import SortableImageList, { Image } from "../components/SortableImageList";
-import { uid } from "../utils/uid";
+import SortableImageList, { Image } from "../../components/SortableImageList";
+import { uid } from "../../utils/uid";
 
 interface props {
   images: Image[];

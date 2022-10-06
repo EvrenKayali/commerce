@@ -1,6 +1,6 @@
 import { Card, CardContent, Box } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import { TextInput } from "../components/TextInput";
+import { TextInput } from "../../components/TextInput";
 
 export default function BasicInfo() {
   const {

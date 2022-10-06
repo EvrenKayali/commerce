@@ -10,9 +10,9 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useState } from "react";
-import { ProductVariant } from "../api/api";
-import { ImageSelectionDialog } from "../components/ImageSelectionDialog";
-import { SelectableImage } from "../components/ImageSelector";
+import { ProductVariant } from "../../api/api";
+import { ImageSelectionDialog } from "../../components/ImageSelectionDialog";
+import { SelectableImage } from "../../components/ImageSelector";
 
 interface VariantItemProps {
   variant: ProductVariant;

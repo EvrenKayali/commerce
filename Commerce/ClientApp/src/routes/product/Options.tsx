@@ -10,7 +10,7 @@ import {
   Divider,
 } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
-import { ClientProductOption, OptionInput } from "../components/OptionInput";
+import { ClientProductOption, OptionInput } from "../../components/OptionInput";
 
 export default function Options({
   options,
