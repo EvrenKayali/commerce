@@ -17,13 +17,20 @@ import { SelectableImage } from "../components/ImageSelector";
 interface VariantItemProps {
   variant: ProductVariant;
   onImageAdd: () => void;
+  onVariantSelect: (checked: boolean, name: string) => void;
 }
 
-function VariantItem({ variant, onImageAdd }: VariantItemProps) {
+function VariantItem({
+  variant,
+  onImageAdd,
+  onVariantSelect,
+}: VariantItemProps) {
   return (
     <Box display="flex" alignItems="center" justifyContent="space-between">
       <Box display="flex" alignItems="center">
-        <Checkbox />
+        <Checkbox
+          onChange={(_, checked) => onVariantSelect(checked, variant.name)}
+        />
         {!variant.image ? (
           <Box
             onClick={onImageAdd}
@@ -66,6 +73,7 @@ export interface props {
 export function Variants({ items, images, onChange }: props) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>();
+  const [selectedVariants, setSelectedVariants] = useState<string[]>([]);
 
   const handleImageSelected = (imgSrc: string) => {
     const modifiedItems = items.map((i) => ({
@@ -76,6 +84,15 @@ export function Variants({ items, images, onChange }: props) {
 
     onChange(modifiedItems);
   };
+
+  const handleVariantSelected = (checked: boolean, name: string) => {
+    if (checked) {
+      setSelectedVariants([...selectedVariants, name]);
+    } else {
+      setSelectedVariants(selectedVariants.filter((v) => v !== name));
+    }
+  };
+
   return (
     <Card>
       <CardContent>
@@ -101,6 +118,9 @@ export function Variants({ items, images, onChange }: props) {
                 setDialogOpen(true);
                 setSelectedVariant(item.name);
               }}
+              onVariantSelect={(checked, name) =>
+                handleVariantSelected(checked, name)
+              }
             />
 
             <Divider sx={{ my: "1rem" }} />
