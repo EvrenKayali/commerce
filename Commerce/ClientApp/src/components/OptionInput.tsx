@@ -97,7 +97,14 @@ export function OptionInput({
               </Box>
             ))}
           </Box>
-          <Button variant="outlined" onClick={handleEditComplete}>
+          <Button
+            variant="outlined"
+            onClick={handleEditComplete}
+            disabled={
+              !Boolean(optionName) ||
+              !Boolean(optionValues.filter((val) => val).length)
+            }
+          >
             Done
           </Button>
         </>
