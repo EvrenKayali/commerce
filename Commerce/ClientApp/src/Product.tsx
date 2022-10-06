@@ -130,15 +130,13 @@ function Form({ formData, header, productId }: props) {
                     onChange={(options) => {
                       field.onChange(options);
 
-                      const valuesOnly = options?.map((opt) =>
-                        opt.values.filter((val) => Boolean(val))
-                      );
+                      const valuesOnly = options
+                        ?.map((opt) => opt.values.filter((val) => Boolean(val)))
+                        .filter((arr) => Boolean(arr.length));
 
                       if (!!valuesOnly.length) {
                         const prod = cartesianProduct(...valuesOnly);
                         methods.setValue("variants", generateVariants(prod));
-                      } else {
-                        methods.setValue("variants", []);
                       }
                     }}
                   />
