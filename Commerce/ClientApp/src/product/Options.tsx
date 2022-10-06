@@ -9,6 +9,7 @@ import {
   Checkbox,
   Divider,
 } from "@mui/material";
+import { Controller, useFormContext } from "react-hook-form";
 import { ClientProductOption, OptionInput } from "../components/OptionInput";
 
 export default function Options({
@@ -107,5 +108,47 @@ export default function Options({
         )}
       </CardContent>
     </Card>
+  );
+}
+
+export function OptionsFormPart() {
+  const { control, getValues, setValue } = useFormContext();
+
+  function cartesianProduct<T>(...allEntries: T[][]): T[][] {
+    return allEntries.reduce<T[][]>(
+      (results, entries) =>
+        results
+          .map((result) => entries.map((entry) => [...result, entry]))
+          .reduce((subResults, result) => [...subResults, ...result], []),
+      [[]]
+    );
+  }
+
+  function generateVariants(cartasian: string[][]) {
+    return cartasian.map((i) => i.join(" / ")).map((x) => ({ name: x }));
+  }
+
+  return (
+    <Controller
+      name="options"
+      control={control}
+      render={({ field }) => (
+        <Options
+          options={getValues("options") as ClientProductOption[]}
+          onChange={(options) => {
+            field.onChange(options);
+
+            const valuesOnly = options
+              ?.map((opt) => opt.values.filter((val) => Boolean(val)))
+              .filter((arr) => Boolean(arr.length));
+
+            if (!!valuesOnly.length) {
+              const prod = cartesianProduct(...valuesOnly);
+              setValue("variants", generateVariants(prod));
+            }
+          }}
+        />
+      )}
+    />
   );
 }

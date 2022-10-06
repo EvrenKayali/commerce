@@ -15,24 +15,11 @@ import BasicInfo from "./product/BasicInfo";
 import Images from "./product/Images";
 import { Save } from "@mui/icons-material";
 import { useQueryClient } from "@tanstack/react-query";
-import Options from "./product/Options";
 import { Status } from "./product/Status";
 import { Organization } from "./product/Organization";
-import { ClientProductOption } from "./components/OptionInput";
 import { Variants } from "./product/Variants";
+import { OptionsFormPart } from "./product/Options";
 
-function cartesianProduct<T>(...allEntries: T[][]): T[][] {
-  return allEntries.reduce<T[][]>(
-    (results, entries) =>
-      results
-        .map((result) => entries.map((entry) => [...result, entry]))
-        .reduce((subResults, result) => [...subResults, ...result], []),
-    [[]]
-  );
-}
-function generateVariants(cartasian: string[][]) {
-  return cartasian.map((i) => i.join(" / ")).map((x) => ({ name: x }));
-}
 interface props {
   productId?: number;
   formData?: ProductFormModel;
@@ -119,29 +106,9 @@ function Form({ formData, header, productId }: props) {
                 onChange={(imgs, files) => handleImageChange(imgs, files)}
               />
               {/* <Pricing /> */}
-              <Controller
-                name="options"
-                control={methods.control}
-                render={({ field }) => (
-                  <Options
-                    options={
-                      methods.getValues("options") as ClientProductOption[]
-                    }
-                    onChange={(options) => {
-                      field.onChange(options);
 
-                      const valuesOnly = options
-                        ?.map((opt) => opt.values.filter((val) => Boolean(val)))
-                        .filter((arr) => Boolean(arr.length));
+              <OptionsFormPart />
 
-                      if (!!valuesOnly.length) {
-                        const prod = cartesianProduct(...valuesOnly);
-                        methods.setValue("variants", generateVariants(prod));
-                      }
-                    }}
-                  />
-                )}
-              />
               {!!methods.watch("variants")?.length && (
                 <Controller
                   name="variants"
