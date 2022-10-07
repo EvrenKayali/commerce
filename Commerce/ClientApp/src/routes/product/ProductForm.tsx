@@ -74,7 +74,7 @@ export function ProductForm({ formData, header, productId }: props) {
         onSuccess: (data) => {
           methods.setValue("imageFiles", null);
           queryClient.invalidateQueries(["Products"]);
-          navigate(`/product/${data?.id}`);
+          navigate(`/products/${data?.id}`);
         },
       });
     }
@@ -100,7 +100,7 @@ export function ProductForm({ formData, header, productId }: props) {
             <Stack spacing={2} width="50%" mr="2rem">
               <BasicInfo />
               <Images
-                images={methods.getValues("images") || []}
+                images={methods.watch("images") || []}
                 onChange={(imgs, files) => handleImageChange(imgs, files)}
               />
               <OptionsFormPart />
@@ -125,11 +125,6 @@ export function ProductForm({ formData, header, productId }: props) {
             </Stack>
           </Box>
         </form>
-        <ul>
-          {methods.watch("imageFiles")?.map((f) => (
-            <li key={f.name}>{f.name}</li>
-          ))}
-        </ul>
       </FormProvider>
       <Snackbar
         open={alert}

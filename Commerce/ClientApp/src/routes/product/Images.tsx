@@ -28,7 +28,7 @@ export default function Images({ images, onChange }: props) {
 
   function handleFileDrop(acceptedFiles: File[]) {
     if (onChange) {
-      const newImageFiles = acceptedFiles.map((file) => ({
+      const newImages = acceptedFiles.map((file) => ({
         src: URL.createObjectURL(file),
         id: uid(),
         fileName: file.name,
@@ -36,7 +36,7 @@ export default function Images({ images, onChange }: props) {
       }));
 
       setFiles(acceptedFiles);
-      onChange([...images, ...newImageFiles], [...files, ...acceptedFiles]);
+      onChange([...images, ...newImages], [...files, ...acceptedFiles]);
     }
   }
 

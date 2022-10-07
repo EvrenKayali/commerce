@@ -112,7 +112,7 @@ export default function Options({
 }
 
 export function OptionsFormPart() {
-  const { control, getValues, setValue } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   function cartesianProduct<T>(...allEntries: T[][]): T[][] {
     return allEntries.reduce<T[][]>(
@@ -134,7 +134,7 @@ export function OptionsFormPart() {
       control={control}
       render={({ field }) => (
         <Options
-          options={getValues("options") as ClientProductOption[]}
+          options={field.value as ClientProductOption[]}
           onChange={(options) => {
             field.onChange(options);
 
