@@ -102,7 +102,15 @@ export function Variants({ items, images, onChange }: props) {
 
         <FormControl sx={{ ml: "10px", mb: "1rem" }}>
           <FormControlLabel
-            control={<Checkbox />}
+            control={
+              <Checkbox
+                checked={selectedVariants.length === items.length}
+                indeterminate={
+                  selectedVariants.length > 0 &&
+                  selectedVariants.length < items.length
+                }
+              />
+            }
             label={
               <Typography>
                 <strong>Showing {items?.length} variants</strong>

@@ -81,7 +81,7 @@ export function ProductForm({ formData, header, productId }: props) {
   };
 
   return (
-    <Box>
+    <Box pb="2rem">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Box display="flex" justifyContent="space-between" mb="1rem">

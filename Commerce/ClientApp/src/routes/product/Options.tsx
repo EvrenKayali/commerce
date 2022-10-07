@@ -10,6 +10,7 @@ import {
   Divider,
 } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
+import { ProductVariant } from "../../api/api";
 import { ClientProductOption, OptionInput } from "../../components/OptionInput";
 
 export default function Options({
@@ -112,7 +113,7 @@ export default function Options({
 }
 
 export function OptionsFormPart() {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, getValues } = useFormContext();
 
   function cartesianProduct<T>(...allEntries: T[][]): T[][] {
     return allEntries.reduce<T[][]>(
@@ -124,8 +125,42 @@ export function OptionsFormPart() {
     );
   }
 
-  function generateVariants(cartasian: string[][]) {
-    return cartasian.map((i) => i.join(" / ")).map((x) => ({ name: x }));
+  function generateVariants(options: ClientProductOption[]) {
+    const valuesOnly = options
+      ?.map((opt) => opt.values.filter((val) => Boolean(val)))
+      .filter((arr) => Boolean(arr.length));
+
+    if (Boolean(valuesOnly.length)) {
+      const prod = cartesianProduct(...valuesOnly); // [s,red] m/red l/red s/blue m/blue l/blue
+
+      const variants: ProductVariant[] = prod.map((p) => ({
+        key: p.sort().join("-"),
+        name: p.join("/"),
+        optionAttributes: p.map((o, idx) => ({
+          name: options[idx].name,
+          value: o,
+        })),
+      }));
+
+      return variants;
+    }
+  }
+
+  function createVariants(
+    newVariants: ProductVariant[],
+    existingVariants: ProductVariant[]
+  ) {
+    const result = newVariants.map((v) => {
+      const existingVariant = existingVariants?.find((ex) => ex.key === v.key);
+
+      if (existingVariant) {
+        return { ...v, image: existingVariant.image };
+      }
+
+      return { ...v };
+    });
+
+    return result;
   }
 
   return (
@@ -137,15 +172,13 @@ export function OptionsFormPart() {
           options={field.value as ClientProductOption[]}
           onChange={(options) => {
             field.onChange(options);
-
-            const valuesOnly = options
-              ?.map((opt) => opt.values.filter((val) => Boolean(val)))
-              .filter((arr) => Boolean(arr.length));
-
-            if (!!valuesOnly.length) {
-              const prod = cartesianProduct(...valuesOnly);
-              setValue("variants", generateVariants(prod));
-            }
+            const newVariants = generateVariants(options);
+            console.log(newVariants);
+            const variants = createVariants(
+              newVariants || [],
+              getValues("variants")
+            );
+            setValue("variants", variants);
           }}
         />
       )}

@@ -37,6 +37,7 @@ export interface ProductVariant {
   name: string;
   optionAttributes?: VariantOptionAttribute[];
   image?: string;
+  key: string;
 }
 
 export function useProducts() {
