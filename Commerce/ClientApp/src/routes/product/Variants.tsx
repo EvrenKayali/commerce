@@ -1,4 +1,3 @@
-import { AddPhotoAlternate } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -6,63 +5,13 @@ import {
   Box,
   Divider,
   Checkbox,
-  FormControl,
-  FormControlLabel,
 } from "@mui/material";
 import { useState } from "react";
 import { ProductVariant } from "../../api/api";
 import { ImageSelectionDialog } from "../../components/ImageSelectionDialog";
 import { SelectableImage } from "../../components/ImageSelector";
-
-interface VariantItemProps {
-  variant: ProductVariant;
-  onImageAdd: () => void;
-  onVariantSelect: (checked: boolean, name: string) => void;
-}
-
-function VariantItem({
-  variant,
-  onImageAdd,
-  onVariantSelect,
-}: VariantItemProps) {
-  return (
-    <Box display="flex" alignItems="center" justifyContent="space-between">
-      <Box display="flex" alignItems="center">
-        <Checkbox
-          onChange={(_, checked) => onVariantSelect(checked, variant.name)}
-        />
-        {!variant.image ? (
-          <Box
-            onClick={onImageAdd}
-            width="75px"
-            height="75px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            sx={{ border: "1px dashed black", cursor: "pointer" }}
-            mr="1rem"
-          >
-            <AddPhotoAlternate fontSize="large" />
-          </Box>
-        ) : (
-          <img
-            src={variant.image}
-            alt=""
-            style={{
-              width: "75px",
-              height: "75px",
-              objectFit: "cover",
-              marginRight: "1rem",
-            }}
-          />
-        )}
-
-        <Typography>{variant.name}</Typography>
-      </Box>
-      <Typography>Lorem ipsum</Typography>
-    </Box>
-  );
-}
+import { VariantList } from "./VariantList";
+import { VariantSelection, VariantSelectionType } from "./VariantSelection";
 
 export interface props {
   items: ProductVariant[];
@@ -78,18 +27,27 @@ export function Variants({ items, images, onChange }: props) {
   const handleImageSelected = (imgSrc: string) => {
     const modifiedItems = items.map((i) => ({
       ...i,
-      image: i.name === selectedVariant ? imgSrc : i.image,
+      image: i.key === selectedVariant ? imgSrc : i.image,
     }));
     setDialogOpen(false);
 
     onChange(modifiedItems);
   };
 
-  const handleVariantSelected = (checked: boolean, name: string) => {
+  const handleVariantSelected = (checked: boolean, key: string) => {
     if (checked) {
-      setSelectedVariants([...selectedVariants, name]);
+      setSelectedVariants([...selectedVariants, key]);
     } else {
-      setSelectedVariants(selectedVariants.filter((v) => v !== name));
+      setSelectedVariants(selectedVariants.filter((v) => v !== key));
+    }
+  };
+
+  const handleVariantFilter = (val: VariantSelectionType) => {
+    if (val === "all") {
+      setSelectedVariants(items.map((i) => i.key));
+    }
+    if (val === "none") {
+      setSelectedVariants([]);
     }
   };
 
@@ -100,40 +58,40 @@ export function Variants({ items, images, onChange }: props) {
           Variants
         </Typography>
 
-        <FormControl sx={{ ml: "10px", mb: "1rem" }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedVariants.length === items.length}
-                indeterminate={
-                  selectedVariants.length > 0 &&
-                  selectedVariants.length < items.length
-                }
-              />
+        <VariantSelection onChange={handleVariantFilter} />
+        <Box
+          mb="1rem"
+          p=".25rem"
+          display="flex"
+          sx={{
+            border: "1px solid black",
+            width: "auto",
+            display: "inline-block",
+          }}
+        >
+          <Checkbox
+            checked={selectedVariants.length === items.length}
+            indeterminate={
+              selectedVariants.length > 0 &&
+              selectedVariants.length < items.length
             }
-            label={
-              <Typography>
-                <strong>Showing {items?.length} variants</strong>
-              </Typography>
+            onChange={(_, checked) =>
+              setSelectedVariants(checked ? items.map((i) => i.key) : [])
             }
+            sx={{ padding: "0 .5rem 0 0" }}
           />
-        </FormControl>
-        {items.map((item, idx) => (
-          <Box key={idx}>
-            <VariantItem
-              variant={item}
-              onImageAdd={() => {
-                setDialogOpen(true);
-                setSelectedVariant(item.name);
-              }}
-              onVariantSelect={(checked, name) =>
-                handleVariantSelected(checked, name)
-              }
-            />
-
-            <Divider sx={{ my: "1rem" }} />
-          </Box>
-        ))}
+          <Typography component="span">Test test test</Typography>
+        </Box>
+        <Divider sx={{ marginBottom: "1rem" }} />
+        <VariantList
+          items={items}
+          onSelectionChange={handleVariantSelected}
+          selectedVariantKeys={selectedVariants}
+          onVariantImageClick={(key) => {
+            setDialogOpen(true);
+            setSelectedVariant(key);
+          }}
+        />
       </CardContent>
       <ImageSelectionDialog
         onDone={(src) => handleImageSelected(src)}

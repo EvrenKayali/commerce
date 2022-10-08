@@ -134,7 +134,7 @@ export function OptionsFormPart() {
       const prod = cartesianProduct(...valuesOnly); // [s,red] m/red l/red s/blue m/blue l/blue
 
       const variants: ProductVariant[] = prod.map((p) => ({
-        key: p.sort().join("-"),
+        key: [...p].sort().join("-"),
         name: p.join("/"),
         optionAttributes: p.map((o, idx) => ({
           name: options[idx].name,
