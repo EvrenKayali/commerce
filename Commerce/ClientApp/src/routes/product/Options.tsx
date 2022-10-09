@@ -9,6 +9,7 @@ import {
   Checkbox,
   Divider,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { Controller, useFormContext } from "react-hook-form";
 import { ProductVariant } from "../../api/api";
 import { ClientProductOption, OptionInput } from "../../components/OptionInput";
@@ -97,7 +98,7 @@ export default function Options({
                 variant="outlined"
                 onClick={handleOptionAdd}
                 sx={{
-                  borderColor: "#ccc",
+                  borderColor: grey[500],
                   color: "#000",
                   marginTop: "1rem",
                 }}

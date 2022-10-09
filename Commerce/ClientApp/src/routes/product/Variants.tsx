@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Divider,
-  Checkbox,
-} from "@mui/material";
+import { Card, CardContent, Typography, Divider } from "@mui/material";
 import { useState } from "react";
 import { ProductVariant } from "../../api/api";
 import { ImageSelectionDialog } from "../../components/ImageSelectionDialog";
@@ -58,31 +51,13 @@ export function Variants({ items, images, onChange }: props) {
           Variants
         </Typography>
 
-        <VariantSelection onChange={handleVariantFilter} />
-        <Box
-          mb="1rem"
-          p=".25rem"
-          display="flex"
-          sx={{
-            border: "1px solid black",
-            width: "auto",
-            display: "inline-block",
-          }}
-        >
-          <Checkbox
-            checked={selectedVariants.length === items.length}
-            indeterminate={
-              selectedVariants.length > 0 &&
-              selectedVariants.length < items.length
-            }
-            onChange={(_, checked) =>
-              setSelectedVariants(checked ? items.map((i) => i.key) : [])
-            }
-            sx={{ padding: "0 .5rem 0 0" }}
-          />
-          <Typography component="span">Test test test</Typography>
-        </Box>
-        <Divider sx={{ marginBottom: "1rem" }} />
+        <VariantSelection
+          onChange={handleVariantFilter}
+          selectedVariantCount={selectedVariants.length}
+          variantCount={items.length}
+        />
+
+        <Divider sx={{ my: "1rem" }} />
         <VariantList
           items={items}
           onSelectionChange={handleVariantSelected}

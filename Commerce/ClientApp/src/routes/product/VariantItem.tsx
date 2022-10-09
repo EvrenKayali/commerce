@@ -18,7 +18,7 @@ export function VariantItem({
     <Box display="flex" alignItems="center" justifyContent="space-between">
       <Box display="flex" alignItems="center">
         <Checkbox
-          sx={{ padding: "0 .5rem 0 0" }}
+          sx={{ padding: "0 .5rem 0 .5rem" }}
           checked={selected}
           onChange={(_, checked) => onVariantSelect(checked, variant.key)}
         />
