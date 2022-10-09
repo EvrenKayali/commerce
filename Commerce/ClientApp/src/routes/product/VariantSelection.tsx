@@ -1,6 +1,7 @@
-import { Box, Button, Checkbox, Link, Stack, Typography } from "@mui/material";
+import { Box, Checkbox, Link, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { ProductOption } from "../../api/api";
+import { ActionButton } from "../../components/ActionButton";
 import { LinkSelect } from "../../components/LinkSelect";
 
 export type VariantSelectionType = "none" | "all";
@@ -87,7 +88,8 @@ export function VariantSelection({
           onChange={onChange}
         />
         {Boolean(selectedVariantCount) && (
-          <Button
+          <ActionButton
+            options={["Edit Image"]}
             disableTouchRipple
             variant="outlined"
             sx={{
@@ -100,9 +102,10 @@ export function VariantSelection({
               m: 0,
               textTransform: "none",
             }}
+            onActionClick={(action) => console.log(action)}
           >
             Actions
-          </Button>
+          </ActionButton>
         )}
       </Stack>
     </Stack>
