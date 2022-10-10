@@ -1,30 +1,43 @@
 import { Card, CardContent, Typography, Divider } from "@mui/material";
 import { useState } from "react";
-import { ProductVariant } from "../../api/api";
+import { ProductOption, ProductVariant } from "../../api/api";
 import { ImageSelectionDialog } from "../../components/ImageSelectionDialog";
 import { SelectableImage } from "../../components/ImageSelector";
 import { VariantList } from "./VariantList";
 import { VariantSelection, VariantSelectionType } from "./VariantSelection";
 
 export interface props {
+  options: ProductOption[];
   items: ProductVariant[];
   images?: SelectableImage[];
   onChange: (variants: ProductVariant[]) => void;
 }
 
-export function Variants({ items, images, onChange }: props) {
+export function Variants({ options, items, images, onChange }: props) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState<string | undefined>();
+  const [selectedVariantForImage, setSelectedVariantForImage] = useState<
+    string | undefined
+  >();
   const [selectedVariants, setSelectedVariants] = useState<string[]>([]);
 
   const handleImageSelected = (imgSrc: string) => {
-    const modifiedItems = items.map((i) => ({
-      ...i,
-      image: i.key === selectedVariant ? imgSrc : i.image,
-    }));
-    setDialogOpen(false);
-
-    onChange(modifiedItems);
+    if (selectedVariantForImage) {
+      const modifiedItems = items.map((i) => ({
+        ...i,
+        image: i.key === selectedVariantForImage ? imgSrc : i.image,
+      }));
+      setDialogOpen(false);
+      setSelectedVariantForImage(undefined);
+      onChange(modifiedItems);
+    } else {
+      const modifiedItems = items.map((i) => ({
+        ...i,
+        image: selectedVariants.some((v) => v === i.key) ? imgSrc : i.image,
+      }));
+      setDialogOpen(false);
+      setSelectedVariantForImage(undefined);
+      onChange(modifiedItems);
+    }
   };
 
   const handleVariantSelected = (checked: boolean, key: string) => {
@@ -44,6 +57,14 @@ export function Variants({ items, images, onChange }: props) {
     }
   };
 
+  const handleActionClick = (action: string) => {
+    switch (action) {
+      case "Edit Image":
+        setDialogOpen(true);
+        break;
+    }
+  };
+
   return (
     <Card>
       <CardContent>
@@ -52,6 +73,8 @@ export function Variants({ items, images, onChange }: props) {
         </Typography>
 
         <VariantSelection
+          options={options}
+          onActionClick={handleActionClick}
           onChange={handleVariantFilter}
           selectedVariantCount={selectedVariants.length}
           variantCount={items.length}
@@ -64,7 +87,7 @@ export function Variants({ items, images, onChange }: props) {
           selectedVariantKeys={selectedVariants}
           onVariantImageClick={(key) => {
             setDialogOpen(true);
-            setSelectedVariant(key);
+            setSelectedVariantForImage(key);
           }}
         />
       </CardContent>
