@@ -1,3 +1,4 @@
+import { ArrowDropDown } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -31,7 +32,12 @@ export function ActionButton({
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <Box>
-        <Button onClick={handleToggle} ref={anchorRef} {...buttonProps}>
+        <Button
+          onClick={handleToggle}
+          ref={anchorRef}
+          endIcon={<ArrowDropDown />}
+          {...buttonProps}
+        >
           {children}
         </Button>
         <Popper

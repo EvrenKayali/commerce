@@ -94,7 +94,6 @@ export function VariantSelection({
         {Boolean(selectedVariantCount) && (
           <ActionButton
             options={["Edit Image"]}
-            disableTouchRipple
             variant="outlined"
             sx={{
               borderRadius: 0,
