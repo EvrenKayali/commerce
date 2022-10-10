@@ -37,6 +37,7 @@ export function VariantItem({
           </Box>
         ) : (
           <img
+            onClick={onImageAdd}
             src={variant.image}
             alt=""
             style={{
@@ -44,13 +45,12 @@ export function VariantItem({
               height: "75px",
               objectFit: "cover",
               marginRight: "1rem",
+              cursor: "pointer",
             }}
           />
         )}
 
-        <Typography>
-          {variant.name} {variant.key}
-        </Typography>
+        <Typography>{variant.name}</Typography>
       </Box>
       <Typography>Lorem ipsum</Typography>
     </Box>

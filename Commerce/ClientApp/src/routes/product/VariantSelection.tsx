@@ -47,11 +47,14 @@ interface props {
   selectedVariantCount: number;
   variantCount: number;
   onChange: (value: VariantSelectionType) => void;
+  onActionClick: (action: string) => void;
 }
 
 export function VariantSelection({
+  options,
   selectedVariantCount,
   variantCount,
+  onActionClick,
   onChange,
 }: props) {
   return (
@@ -78,8 +81,9 @@ export function VariantSelection({
         >
           none
         </Link>
-        <LinkSelect options={["black", "white", "red"]} text="color" />
-        <LinkSelect options={["S", "M", "L"]} text="size" />
+        {options?.map((o) => (
+          <LinkSelect options={o.values} text={o.name.toLowerCase()} />
+        ))}
       </Stack>
       <Stack direction="row">
         <SelectCheckbox
@@ -102,7 +106,7 @@ export function VariantSelection({
               m: 0,
               textTransform: "none",
             }}
-            onActionClick={(action) => console.log(action)}
+            onActionClick={onActionClick}
           >
             Actions
           </ActionButton>

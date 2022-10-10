@@ -111,6 +111,7 @@ export function ProductForm({ formData, header, productId }: props) {
                   control={methods.control}
                   render={({ field }) => (
                     <Variants
+                      options={methods.watch("options") || []}
                       onChange={field.onChange}
                       items={methods.getValues("variants") ?? []}
                       images={methods.getValues("images")}
