@@ -174,7 +174,6 @@ export function OptionsFormPart() {
           onChange={(options) => {
             field.onChange(options);
             const newVariants = generateVariants(options);
-            console.log(newVariants);
             const variants = createVariants(
               newVariants || [],
               getValues("variants")

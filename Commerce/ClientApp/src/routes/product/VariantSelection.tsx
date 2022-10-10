@@ -4,7 +4,7 @@ import { ProductOption } from "../../api/api";
 import { ActionButton } from "../../components/ActionButton";
 import { LinkSelect } from "../../components/LinkSelect";
 
-export type VariantSelectionType = "none" | "all";
+export type VariantSelectionType = "none" | "all" | ProductOption[];
 
 function SelectCheckbox({
   selectedCount,
@@ -46,6 +46,7 @@ interface props {
   options?: ProductOption[];
   selectedVariantCount: number;
   variantCount: number;
+  selectedOptions?: ProductOption[];
   onChange: (value: VariantSelectionType) => void;
   onActionClick: (action: string) => void;
 }
@@ -54,9 +55,15 @@ export function VariantSelection({
   options,
   selectedVariantCount,
   variantCount,
+  selectedOptions,
   onActionClick,
   onChange,
 }: props) {
+  const handleSelectionChange = (optionName: string, values: string[]) => {
+    const removed = selectedOptions?.filter((o) => o.name !== optionName);
+    onChange([...(removed || []), { name: optionName, values }]);
+  };
+
   return (
     <Stack>
       <Stack direction="row" alignItems="center" mb="1rem" spacing={2}>
@@ -68,6 +75,7 @@ export function VariantSelection({
           onClick={() => {
             onChange("all");
           }}
+          type="button"
         >
           all
         </Link>
@@ -78,11 +86,20 @@ export function VariantSelection({
           onClick={() => {
             onChange("none");
           }}
+          type="button"
         >
           none
         </Link>
-        {options?.map((o) => (
-          <LinkSelect options={o.values} text={o.name.toLowerCase()} />
+        {options?.map((o, idx) => (
+          <LinkSelect
+            key={idx}
+            value={
+              selectedOptions?.find((f) => f.name === o.name)?.values || []
+            }
+            options={o.values}
+            text={o.name.toLowerCase()}
+            onOptionChange={(values) => handleSelectionChange(o.name, values)}
+          />
         ))}
       </Stack>
       <Stack direction="row">

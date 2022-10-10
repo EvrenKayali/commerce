@@ -19,6 +19,8 @@ export function Variants({ options, items, images, onChange }: props) {
     string | undefined
   >();
   const [selectedVariants, setSelectedVariants] = useState<string[]>([]);
+  const [selectedFilterOptions, setSelectedFilterOptions] =
+    useState<ProductOption[]>();
 
   const handleImageSelected = (imgSrc: string) => {
     if (selectedVariantForImage) {
@@ -51,10 +53,31 @@ export function Variants({ options, items, images, onChange }: props) {
   const handleVariantFilter = (val: VariantSelectionType) => {
     if (val === "all") {
       setSelectedVariants(items.map((i) => i.key));
+      setSelectedFilterOptions([]);
+      return;
     }
+
     if (val === "none") {
       setSelectedVariants([]);
+      setSelectedFilterOptions([]);
+      return;
     }
+
+    setSelectedFilterOptions(val);
+
+    console.log(val);
+
+    const filtered = items
+      .filter((i) =>
+        i.optionAttributes?.some(
+          (a) =>
+            a.name === "Color" &&
+            val.find((c) => c.name === "Color")?.values.includes(a.value)
+        )
+      )
+      .map((x) => x.key);
+
+    setSelectedVariants(filtered);
   };
 
   const handleActionClick = (action: string) => {
@@ -74,6 +97,7 @@ export function Variants({ options, items, images, onChange }: props) {
 
         <VariantSelection
           options={options}
+          selectedOptions={selectedFilterOptions}
           onActionClick={handleActionClick}
           onChange={handleVariantFilter}
           selectedVariantCount={selectedVariants.length}

@@ -17,14 +17,30 @@ import { useRef, useState } from "react";
 interface props extends BoxProps {
   text: string;
   options: string[];
+  value: string[];
+  onOptionChange: (values: string[]) => void;
 }
 
-export function LinkSelect({ text, options, ...boxProps }: props) {
+export function LinkSelect({
+  text,
+  options,
+  value,
+  onOptionChange,
+  ...boxProps
+}: props) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleChange = (option: string, checked: boolean) => {
+    if (checked) {
+      onOptionChange([...(value || []), option]);
+    } else {
+      onOptionChange(value!.filter((v) => v !== option));
+    }
   };
 
   return (
@@ -37,6 +53,7 @@ export function LinkSelect({ text, options, ...boxProps }: props) {
           component="button"
           underline="none"
           sx={{ display: "flex", alignItems: "Center" }}
+          type="button"
         >
           {text}
           <ArrowDropDown
@@ -66,11 +83,18 @@ export function LinkSelect({ text, options, ...boxProps }: props) {
               <Paper>
                 <MenuList autoFocusItem>
                   {options.map((option, index) => (
-                    <MenuItem
-                      key={option}
-                      onClick={(event) => console.log(event, index)}
-                    >
-                      <FormControlLabel control={<Checkbox />} label={option} />
+                    <MenuItem key={option}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            onChange={(_, checked) =>
+                              handleChange(option, checked)
+                            }
+                            checked={value.some((v) => v === option)}
+                          />
+                        }
+                        label={option}
+                      />
                     </MenuItem>
                   ))}
                 </MenuList>
