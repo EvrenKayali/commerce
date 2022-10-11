@@ -61,7 +61,12 @@ export function VariantSelection({
 }: props) {
   const handleSelectionChange = (optionName: string, values: string[]) => {
     const removed = selectedOptions?.filter((o) => o.name !== optionName);
-    onChange([...(removed || []), { name: optionName, values }]);
+
+    if (values.length > 0) {
+      onChange([...(removed || []), { name: optionName, values }]);
+    } else {
+      onChange([...(removed || [])]);
+    }
   };
 
   return (

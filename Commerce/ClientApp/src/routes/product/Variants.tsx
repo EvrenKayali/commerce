@@ -1,6 +1,7 @@
 import { Card, CardContent, Typography, Divider } from "@mui/material";
 import { useState } from "react";
 import { ProductOption, ProductVariant } from "../../api/api";
+import { filterVariants } from "../../utils/variantHelper";
 import { ImageSelectionDialog } from "../../components/ImageSelectionDialog";
 import { SelectableImage } from "../../components/ImageSelector";
 import { VariantList } from "./VariantList";
@@ -65,19 +66,9 @@ export function Variants({ options, items, images, onChange }: props) {
 
     setSelectedFilterOptions(val);
 
-    console.log(val);
+    const filteredKeys = filterVariants(items, val).map((r) => r.key);
 
-    const filtered = items
-      .filter((i) =>
-        i.optionAttributes?.some(
-          (a) =>
-            a.name === "Color" &&
-            val.find((c) => c.name === "Color")?.values.includes(a.value)
-        )
-      )
-      .map((x) => x.key);
-
-    setSelectedVariants(filtered);
+    setSelectedVariants(filteredKeys);
   };
 
   const handleActionClick = (action: string) => {
