@@ -44,8 +44,8 @@ function SelectCheckbox({
 
 interface props {
   options?: ProductOption[];
-  selectedVariantCount: number;
-  variantCount: number;
+  selectedVariantCount?: number;
+  variantCount?: number;
   selectedOptions?: ProductOption[];
   onChange: (value: ProductOption[]) => void;
   onActionClick: (action: string) => void;
@@ -112,8 +112,8 @@ export function VariantSelection({
       <Stack direction="row">
         <SelectCheckbox
           options={options}
-          selectedCount={selectedVariantCount}
-          variantCount={variantCount}
+          selectedCount={selectedVariantCount || 0}
+          variantCount={variantCount || 0}
           onChange={onChange}
         />
         {Boolean(selectedVariantCount) && (

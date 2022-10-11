@@ -2,7 +2,7 @@ import { Typography, Stack, Box, Snackbar, Alert } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { serialize } from "object-to-formdata";
 import React, { useState } from "react";
-import { useForm, FormProvider, Controller } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
   ProductFormModel,
@@ -16,7 +16,7 @@ import { Save } from "@mui/icons-material";
 import { useQueryClient } from "@tanstack/react-query";
 import { Status } from "./Status";
 import { Organization } from "./Organization";
-import { Variants } from "./Variants";
+import { VariantsFormPart } from "./Variants";
 import { OptionsFormPart } from "./Options";
 
 interface props {
@@ -104,21 +104,9 @@ export function ProductForm({ formData, header, productId }: props) {
                 onChange={(imgs, files) => handleImageChange(imgs, files)}
               />
               <OptionsFormPart />
-
-              {!!methods.watch("variants")?.length && (
-                <Controller
-                  name="variants"
-                  control={methods.control}
-                  render={({ field }) => (
-                    <Variants
-                      options={methods.watch("options") || []}
-                      onChange={field.onChange}
-                      items={methods.getValues("variants") ?? []}
-                      images={methods.getValues("images")}
-                    />
-                  )}
-                />
-              )}
+              <VariantsFormPart
+                options={methods.watch("options")?.filter((o) => o.name)}
+              />
             </Stack>
             <Stack spacing={2} minWidth="30rem">
               <Status />

@@ -6,6 +6,7 @@ import { ImageSelectionDialog } from "../../components/ImageSelectionDialog";
 import { SelectableImage } from "../../components/ImageSelector";
 import { VariantList } from "./VariantList";
 import { VariantSelection } from "./VariantSelection";
+import { Controller, useFormContext } from "react-hook-form";
 
 export interface props {
   options: ProductOption[];
@@ -14,7 +15,7 @@ export interface props {
   onChange: (variants: ProductVariant[]) => void;
 }
 
-export function Variants({ options, items, images, onChange }: props) {
+function Variants({ options, items, images, onChange }: props) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedVariantForImage, setSelectedVariantForImage] = useState<
     string | undefined
@@ -69,6 +70,8 @@ export function Variants({ options, items, images, onChange }: props) {
     }
   };
 
+  if (!Boolean(items.length)) return <></>;
+
   return (
     <Card>
       <CardContent>
@@ -82,7 +85,7 @@ export function Variants({ options, items, images, onChange }: props) {
           onActionClick={handleActionClick}
           onChange={handleVariantFilter}
           selectedVariantCount={selectedVariants.length}
-          variantCount={items.length}
+          variantCount={items?.length}
         />
 
         <Divider sx={{ my: "1rem" }} />
@@ -103,5 +106,26 @@ export function Variants({ options, items, images, onChange }: props) {
         onDialogClose={() => setDialogOpen(false)}
       />
     </Card>
+  );
+}
+
+export function VariantsFormPart({ options }: { options?: ProductOption[] }) {
+  const { control, getValues } = useFormContext();
+
+  if (!Boolean(options?.length)) return <></>;
+
+  return (
+    <Controller
+      name="variants"
+      control={control}
+      render={({ field }) => (
+        <Variants
+          options={options || []}
+          onChange={field.onChange}
+          items={field.value || []}
+          images={getValues("images")}
+        />
+      )}
+    />
   );
 }
