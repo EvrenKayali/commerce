@@ -4,16 +4,16 @@ import { ProductOption } from "../../api/api";
 import { ActionButton } from "../../components/ActionButton";
 import { LinkSelect } from "../../components/LinkSelect";
 
-export type VariantSelectionType = "none" | "all" | ProductOption[];
-
 function SelectCheckbox({
+  options,
   selectedCount,
   variantCount,
   onChange,
 }: {
+  options?: ProductOption[];
   selectedCount: number;
   variantCount: number;
-  onChange: (val: VariantSelectionType) => void;
+  onChange: (val: ProductOption[]) => void;
 }) {
   return (
     <Box
@@ -30,7 +30,7 @@ function SelectCheckbox({
       <Checkbox
         checked={selectedCount === variantCount}
         indeterminate={selectedCount > 0 && selectedCount < variantCount}
-        onChange={(_, checked) => onChange(checked ? "all" : "none")}
+        onChange={(_, checked) => onChange(checked ? options || [] : [])}
         sx={{ padding: "0 .5rem 0 .5rem", margin: 0 }}
       />
       {Boolean(selectedCount) && (
@@ -47,7 +47,7 @@ interface props {
   selectedVariantCount: number;
   variantCount: number;
   selectedOptions?: ProductOption[];
-  onChange: (value: VariantSelectionType) => void;
+  onChange: (value: ProductOption[]) => void;
   onActionClick: (action: string) => void;
 }
 
@@ -71,14 +71,14 @@ export function VariantSelection({
 
   return (
     <Stack>
-      <Stack direction="row" alignItems="center" mb="1rem" spacing={2}>
+      <Stack direction="row" alignItems="center" mb="2rem" spacing={2}>
         <Typography sx={{ mr: ".50rem" }}>Select</Typography>
         <Link
           fontSize="medium"
           component="button"
           underline="none"
           onClick={() => {
-            onChange("all");
+            onChange(options || []);
           }}
           type="button"
         >
@@ -89,26 +89,29 @@ export function VariantSelection({
           component="button"
           underline="none"
           onClick={() => {
-            onChange("none");
+            onChange([]);
           }}
           type="button"
         >
           none
         </Link>
-        {options?.map((o, idx) => (
-          <LinkSelect
-            key={idx}
-            value={
-              selectedOptions?.find((f) => f.name === o.name)?.values || []
-            }
-            options={o.values}
-            text={o.name.toLowerCase()}
-            onOptionChange={(values) => handleSelectionChange(o.name, values)}
-          />
-        ))}
+        {options
+          ?.filter((o) => o.name)
+          .map((o, idx) => (
+            <LinkSelect
+              key={idx}
+              value={
+                selectedOptions?.find((f) => f.name === o.name)?.values || []
+              }
+              options={o.values}
+              text={o.name.toLowerCase()}
+              onOptionChange={(values) => handleSelectionChange(o.name, values)}
+            />
+          ))}
       </Stack>
       <Stack direction="row">
         <SelectCheckbox
+          options={options}
           selectedCount={selectedVariantCount}
           variantCount={variantCount}
           onChange={onChange}

@@ -5,7 +5,7 @@ import { filterVariants } from "../../utils/variantHelper";
 import { ImageSelectionDialog } from "../../components/ImageSelectionDialog";
 import { SelectableImage } from "../../components/ImageSelector";
 import { VariantList } from "./VariantList";
-import { VariantSelection, VariantSelectionType } from "./VariantSelection";
+import { VariantSelection } from "./VariantSelection";
 
 export interface props {
   options: ProductOption[];
@@ -46,24 +46,14 @@ export function Variants({ options, items, images, onChange }: props) {
   const handleVariantSelected = (checked: boolean, key: string) => {
     if (checked) {
       setSelectedVariants([...selectedVariants, key]);
+      setSelectedFilterOptions([]);
     } else {
       setSelectedVariants(selectedVariants.filter((v) => v !== key));
+      setSelectedFilterOptions([]);
     }
   };
 
-  const handleVariantFilter = (val: VariantSelectionType) => {
-    if (val === "all") {
-      setSelectedVariants(items.map((i) => i.key));
-      setSelectedFilterOptions([]);
-      return;
-    }
-
-    if (val === "none") {
-      setSelectedVariants([]);
-      setSelectedFilterOptions([]);
-      return;
-    }
-
+  const handleVariantFilter = (val: ProductOption[]) => {
     setSelectedFilterOptions(val);
 
     const filteredKeys = filterVariants(items, val).map((r) => r.key);
