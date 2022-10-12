@@ -39,12 +39,17 @@ public static class AddProduct
                     Order = img.Order
                 }).ToList();
 
+
+
             var product = new Product
             {
                 Title = request.Title!,
                 Description = request.Description!,
                 Slug = request.Slug,
-                Images = productImages
+                Images = productImages,
+                Options = request.Options is not null
+                ? request.Options.Select(o => new Data.Entites.ProductOption { Name = o.Name, Values = string.Join(",", o.Values) }).ToList()
+                : null
             };
 
             await _db.Products.AddAsync(product, cancellationToken);

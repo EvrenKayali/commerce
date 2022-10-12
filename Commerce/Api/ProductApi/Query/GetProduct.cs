@@ -24,6 +24,7 @@ public static class GetProduct
         {
             var product = await _db.Products
                 .Include(p => p.Images)
+                .Include(p => p.Options)
                 .FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
 
             product = product ?? throw new Exception($"product cannot be found. ProductId: {request.ProductId}");
@@ -42,7 +43,9 @@ public static class GetProduct
                 Description = product.Description,
                 Slug = product.Slug,
                 Images = images,
-                Options = new List<ProductOption> { { new ProductOption { Name = "Color", Values = new string[] { "Red", "Yellow", "Blue" } } } }
+                Options = product.Options is not null
+                ? product.Options?.Select(o => new ProductOption { Name = o.Name, Values = o.Values.Split(",") }).ToList()
+                : null
             };
         }
     }
