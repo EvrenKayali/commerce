@@ -8,6 +8,8 @@ public class CommerceDbContext : DbContext
 {
     public DbSet<Product> Products => Set<Product>();
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
+    public DbSet<ProductOption> ProductOptions => Set<ProductOption>();
+    public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
 
     public CommerceDbContext(DbContextOptions<CommerceDbContext> options) : base(options) { }
 

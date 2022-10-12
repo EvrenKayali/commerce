@@ -7,4 +7,6 @@ public class Product
     public string Description { get; set; } = null!;
     public string Slug { get; set; } = null!;
     public ICollection<ProductImage>? Images { get; set; }
+    public ICollection<ProductVariant>? Variants { get; set; }
+    public ICollection<ProductOption>? Options { get; set; }
 }
