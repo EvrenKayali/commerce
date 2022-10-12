@@ -1,9 +1,9 @@
 import { Box, Divider } from "@mui/material";
-import { ProductVariant } from "../../api/api";
+import { Variant } from "../../api/api";
 import { VariantItem } from "./VariantItem";
 
 interface props {
-  items: ProductVariant[];
+  items: Variant[];
   selectedVariantKeys: string[];
   onVariantImageClick: (key: string) => void;
   onSelectionChange: (checked: boolean, key: string) => void;

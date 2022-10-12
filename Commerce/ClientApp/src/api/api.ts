@@ -29,14 +29,14 @@ export interface ProductFormModel {
   imageFiles?: File[] | null;
   images?: Image[];
   options?: ProductOption[];
-  variants?: ProductVariant[];
+  variants?: Variant[];
 }
 
-export interface ProductVariant {
+export interface Variant {
   id?: number;
   name: string;
   optionAttributes?: VariantOptionAttribute[];
-  image?: string;
+  imageSrc?: string;
   key: string;
 }
 

@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography, Divider } from "@mui/material";
 import { useState } from "react";
-import { ProductOption, ProductVariant } from "../../api/api";
+import { ProductOption, Variant } from "../../api/api";
 import { filterVariants } from "../../utils/variantHelper";
 import { ImageSelectionDialog } from "../../components/ImageSelectionDialog";
 import { SelectableImage } from "../../components/ImageSelector";
@@ -10,9 +10,9 @@ import { Controller, useFormContext } from "react-hook-form";
 
 export interface props {
   options: ProductOption[];
-  items: ProductVariant[];
+  items: Variant[];
   images?: SelectableImage[];
-  onChange: (variants: ProductVariant[]) => void;
+  onChange: (variants: Variant[]) => void;
 }
 
 function Variants({ options, items, images, onChange }: props) {
@@ -28,7 +28,7 @@ function Variants({ options, items, images, onChange }: props) {
     if (selectedVariantForImage) {
       const modifiedItems = items.map((i) => ({
         ...i,
-        image: i.key === selectedVariantForImage ? imgSrc : i.image,
+        image: i.key === selectedVariantForImage ? imgSrc : i.imageSrc,
       }));
       setDialogOpen(false);
       setSelectedVariantForImage(undefined);
@@ -36,7 +36,7 @@ function Variants({ options, items, images, onChange }: props) {
     } else {
       const modifiedItems = items.map((i) => ({
         ...i,
-        image: selectedVariants.some((v) => v === i.key) ? imgSrc : i.image,
+        image: selectedVariants.some((v) => v === i.key) ? imgSrc : i.imageSrc,
       }));
       setDialogOpen(false);
       setSelectedVariantForImage(undefined);

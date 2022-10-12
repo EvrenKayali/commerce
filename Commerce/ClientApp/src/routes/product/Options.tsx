@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { Controller, useFormContext } from "react-hook-form";
-import { ProductVariant } from "../../api/api";
+import { Variant } from "../../api/api";
 import { ClientProductOption, OptionInput } from "../../components/OptionInput";
 
 export default function Options({
@@ -134,7 +134,7 @@ export function OptionsFormPart() {
     if (Boolean(valuesOnly.length)) {
       const prod = cartesianProduct(...valuesOnly); // [s,red] m/red l/red s/blue m/blue l/blue
 
-      const variants: ProductVariant[] = prod.map((p) => ({
+      const variants: Variant[] = prod.map((p) => ({
         key: [...p].sort().join("-"),
         name: p.join("/"),
         optionAttributes: p.map((o, idx) => ({
@@ -147,15 +147,12 @@ export function OptionsFormPart() {
     }
   }
 
-  function createVariants(
-    newVariants: ProductVariant[],
-    existingVariants: ProductVariant[]
-  ) {
+  function createVariants(newVariants: Variant[], existingVariants: Variant[]) {
     const result = newVariants.map((v) => {
       const existingVariant = existingVariants?.find((ex) => ex.key === v.key);
 
       if (existingVariant) {
-        return { ...v, image: existingVariant.image };
+        return { ...v, imageSrc: existingVariant.imageSrc };
       }
 
       return { ...v };

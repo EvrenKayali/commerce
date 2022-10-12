@@ -1,9 +1,9 @@
 import { AddPhotoAlternate } from "@mui/icons-material";
 import { Box, Checkbox, Typography } from "@mui/material";
-import { ProductVariant } from "../../api/api";
+import { Variant } from "../../api/api";
 
 interface props {
-  variant: ProductVariant;
+  variant: Variant;
   selected: boolean;
   onImageAdd: () => void;
   onVariantSelect: (checked: boolean, name: string) => void;
@@ -22,7 +22,7 @@ export function VariantItem({
           checked={selected}
           onChange={(_, checked) => onVariantSelect(checked, variant.key)}
         />
-        {!variant.image ? (
+        {!variant.imageSrc ? (
           <Box
             onClick={onImageAdd}
             width="75px"
@@ -38,7 +38,7 @@ export function VariantItem({
         ) : (
           <img
             onClick={onImageAdd}
-            src={variant.image}
+            src={variant.imageSrc}
             alt=""
             style={{
               width: "75px",

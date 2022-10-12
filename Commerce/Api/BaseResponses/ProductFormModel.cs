@@ -6,6 +6,15 @@ public record ProductOption
     public string[] Values { get; set; } = null!;
 }
 
+public record Variant
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
+    public string Key { get; set; } = null!;
+    public string? ImageSrc { get; set; }
+
+}
+
 public record ProductFormModel
 {
     public int Id { get; set; }

@@ -44,6 +44,9 @@ public static class UpdateProduct
             product.Description = request.Description!;
             product.Slug = request.Slug;
             product.Images = productImages;
+            product.Options = request.Options is not null
+                ? request.Options.Select(o => new Data.Entites.ProductOption { Name = o.Name, Values = string.Join(",", o.Values) }).ToList()
+                : null;
 
             await _db.SaveChangesAsync(cancellationToken);
 

@@ -1,13 +1,6 @@
-import {
-  ProductOption,
-  ProductVariant,
-  VariantOptionAttribute,
-} from "../api/api";
+import { ProductOption, Variant, VariantOptionAttribute } from "../api/api";
 
-export function filterVariants(
-  variants: ProductVariant[],
-  filters: ProductOption[]
-) {
+export function filterVariants(variants: Variant[], filters: ProductOption[]) {
   return variants.filter((i) => filtersMatch(filters, i.optionAttributes));
 }
 
