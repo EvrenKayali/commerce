@@ -28,7 +28,7 @@ function Variants({ options, items, images, onChange }: props) {
     if (selectedVariantForImage) {
       const modifiedItems = items.map((i) => ({
         ...i,
-        image: i.key === selectedVariantForImage ? imgSrc : i.imageSrc,
+        imageSrc: i.key === selectedVariantForImage ? imgSrc : i.imageSrc,
       }));
       setDialogOpen(false);
       setSelectedVariantForImage(undefined);
@@ -36,7 +36,9 @@ function Variants({ options, items, images, onChange }: props) {
     } else {
       const modifiedItems = items.map((i) => ({
         ...i,
-        image: selectedVariants.some((v) => v === i.key) ? imgSrc : i.imageSrc,
+        imageSrc: selectedVariants.some((v) => v === i.key)
+          ? imgSrc
+          : i.imageSrc,
       }));
       setDialogOpen(false);
       setSelectedVariantForImage(undefined);
