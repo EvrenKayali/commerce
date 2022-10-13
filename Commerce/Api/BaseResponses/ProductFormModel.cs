@@ -8,11 +8,10 @@ public record ProductOption
 
 public record Variant
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
     public string Name { get; set; } = null!;
     public string Key { get; set; } = null!;
-    public string? ImageSrc { get; set; }
-
+    public string? ImgSrc { get; set; }
 }
 
 public record ProductFormModel
@@ -24,4 +23,5 @@ public record ProductFormModel
     public List<ProductImageBase>? Images { get; set; }
     public IFormFile[]? ImageFiles { get; set; }
     public List<ProductOption>? Options { get; set; }
+    public List<Variant>? Variants { get; set; }
 }

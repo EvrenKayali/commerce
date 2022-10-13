@@ -23,7 +23,11 @@ export default function Images({ images, onChange }: props) {
   function handleImageChange(imgs: Image[]) {
     const imgFileNames = imgs.map((img) => img.fileName);
     const filteredFiles = files.filter((f) => imgFileNames.includes(f.name));
-    onChange && onChange(imgs, filteredFiles);
+    onChange &&
+      onChange(
+        imgs.map((i, idx) => ({ ...i, order: idx })),
+        filteredFiles
+      );
   }
 
   function handleFileDrop(acceptedFiles: File[]) {
@@ -36,7 +40,11 @@ export default function Images({ images, onChange }: props) {
       }));
 
       setFiles(acceptedFiles);
-      onChange([...images, ...newImages], [...files, ...acceptedFiles]);
+      const imgs = [...images, ...newImages].map((i, idx) => ({
+        ...i,
+        order: idx,
+      }));
+      onChange(imgs, [...files, ...acceptedFiles]);
     }
   }
 

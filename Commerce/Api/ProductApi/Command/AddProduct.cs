@@ -47,9 +47,8 @@ public static class AddProduct
                 Description = request.Description!,
                 Slug = request.Slug,
                 Images = productImages,
-                Options = request.Options is not null
-                ? request.Options.Select(o => new Data.Entites.ProductOption { Name = o.Name, Values = string.Join(",", o.Values) }).ToList()
-                : null
+                Options = request.Options?.Select(o => new Data.Entites.ProductOption { Name = o.Name, Values = string.Join(",", o.Values) }).ToList(),
+                Variants = request.Variants?.Select(v => new ProductVariant { Name = v.Name, Key = v.Key, ImgSrc = v.ImgSrc }).ToList()
             };
 
             await _db.Products.AddAsync(product, cancellationToken);

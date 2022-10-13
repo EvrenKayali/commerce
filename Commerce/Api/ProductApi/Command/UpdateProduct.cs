@@ -26,6 +26,8 @@ public static class UpdateProduct
         {
             var product = _db.Products
                 .Include(p => p.Images)
+                .Include(p => p.Options)
+                .Include(p => p.Variants)
                 .FirstOrDefault(p => p.Id == request.Id);
 
             product = product ?? throw new Exception($"product cannot be found. ProductId: {request.Id}");
@@ -44,9 +46,8 @@ public static class UpdateProduct
             product.Description = request.Description!;
             product.Slug = request.Slug;
             product.Images = productImages;
-            product.Options = request.Options is not null
-                ? request.Options.Select(o => new Data.Entites.ProductOption { Name = o.Name, Values = string.Join(",", o.Values) }).ToList()
-                : null;
+            product.Options = request.Options?.Select(o => new Data.Entites.ProductOption { Name = o.Name, Values = string.Join(",", o.Values) }).ToList();
+            product.Variants = request.Variants?.Select(v => new ProductVariant { Name = v.Name, Key = v.Key, ImgSrc = v.ImgSrc }).ToList();
 
             await _db.SaveChangesAsync(cancellationToken);
 
