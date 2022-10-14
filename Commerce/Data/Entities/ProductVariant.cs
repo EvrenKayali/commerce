@@ -6,4 +6,5 @@ public class ProductVariant
     public string Key { get; set; } = null!;
     public string Name { get; set; } = null!;
     public string? ImgSrc { get; set; }
+    public ICollection<VariantAttribute>? Attributes { get; set; }
 }
