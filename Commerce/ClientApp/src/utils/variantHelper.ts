@@ -1,7 +1,7 @@
 import { ProductOption, Variant, VariantOptionAttribute } from "../api/api";
 
 export function filterVariants(variants: Variant[], filters: ProductOption[]) {
-  return variants.filter((i) => filtersMatch(filters, i.optionAttributes));
+  return variants.filter((i) => filtersMatch(filters, i.attributes));
 }
 
 function filtersMatch(

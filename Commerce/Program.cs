@@ -25,6 +25,8 @@ builder.Services.AddAzureClients(clientBuilder =>
 builder.Services.AddTransient<IStorageService, AzureBlobStorageService>();
 builder.Services.AddTransient<AuthMiddleware>();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;

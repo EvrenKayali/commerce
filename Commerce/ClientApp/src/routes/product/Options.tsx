@@ -137,7 +137,7 @@ export function OptionsFormPart() {
       const variants: Variant[] = prod.map((p) => ({
         key: [...p].sort().join("-"),
         name: p.join("/"),
-        optionAttributes: p.map((o, idx) => ({
+        attributes: p.map((o, idx) => ({
           name: options[idx].name,
           value: o,
         })),

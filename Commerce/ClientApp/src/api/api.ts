@@ -35,7 +35,7 @@ export interface ProductFormModel {
 export interface Variant {
   id?: number;
   name: string;
-  optionAttributes?: VariantOptionAttribute[];
+  attributes?: VariantOptionAttribute[];
   imageSrc?: string;
   key: string;
 }
