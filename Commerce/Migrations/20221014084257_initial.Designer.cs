@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Commerce.Migrations
 {
     [DbContext(typeof(CommerceDbContext))]
-    [Migration("20221012033003_options")]
-    partial class options
+    [Migration("20221014084257_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -127,6 +127,22 @@ namespace Commerce.Migrations
                     b.ToTable("ProductVariants");
                 });
 
+            modelBuilder.Entity("Commerce.Data.Entites.VariantAttribute", b =>
+                {
+                    b.Property<long>("VariantId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("VariantId", "Name", "Value");
+
+                    b.ToTable("VariantAttribute");
+                });
+
             modelBuilder.Entity("Commerce.Data.Entites.ProductImage", b =>
                 {
                     b.HasOne("Commerce.Data.Entites.Product", "Product")
@@ -160,6 +176,17 @@ namespace Commerce.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Commerce.Data.Entites.VariantAttribute", b =>
+                {
+                    b.HasOne("Commerce.Data.Entites.ProductVariant", "Variant")
+                        .WithMany("Attributes")
+                        .HasForeignKey("VariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Variant");
+                });
+
             modelBuilder.Entity("Commerce.Data.Entites.Product", b =>
                 {
                     b.Navigation("Images");
@@ -167,6 +194,11 @@ namespace Commerce.Migrations
                     b.Navigation("Options");
 
                     b.Navigation("Variants");
+                });
+
+            modelBuilder.Entity("Commerce.Data.Entites.ProductVariant", b =>
+                {
+                    b.Navigation("Attributes");
                 });
 #pragma warning restore 612, 618
         }

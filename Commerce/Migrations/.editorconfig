@@ -1,8 +1,0 @@
-[*.cs]
-
-# Ignore: RCS1036: Remove redundant empty line
-# Migration files are always created with empty lines so do not bother
-dotnet_diagnostic.RCS1036.severity = none
-
-# Or maybe just ignore it all, we don't usually modify it manually anyway
-generated_code: true

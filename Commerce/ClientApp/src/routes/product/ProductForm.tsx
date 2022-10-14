@@ -55,29 +55,30 @@ export function ProductForm({ formData, header, productId }: props) {
     useUpdateProductMutation();
 
   const onSubmit = async (data: ProductFormModel) => {
+    console.log(data);
     data.images = data.images?.map((i) => ({ ...i, id: i.isNew ? 0 : i.id }));
-    const formData = serialize(data, {
-      noFilesWithArrayNotation: true,
-      indices: true,
-    });
-    if (productId && productId > 0) {
-      updateProduct(formData, {
-        onSuccess: () => {
-          setAlert(true);
-          methods.setValue("imageFiles", null);
-          queryClient.invalidateQueries(["Product", productId]);
-          queryClient.invalidateQueries(["Products"]);
-        },
-      });
-    } else {
-      addProduct(formData, {
-        onSuccess: (data) => {
-          methods.setValue("imageFiles", null);
-          queryClient.invalidateQueries(["Products"]);
-          navigate(`/products/${data?.id}`);
-        },
-      });
-    }
+    // const formData = serialize(data, {
+    //   noFilesWithArrayNotation: true,
+    //   indices: true,
+    // });
+    // if (productId && productId > 0) {
+    //   updateProduct(formData, {
+    //     onSuccess: () => {
+    //       setAlert(true);
+    //       methods.setValue("imageFiles", null);
+    //       queryClient.invalidateQueries(["Product", productId]);
+    //       queryClient.invalidateQueries(["Products"]);
+    //     },
+    //   });
+    // } else {
+    //   addProduct(formData, {
+    //     onSuccess: (data) => {
+    //       methods.setValue("imageFiles", null);
+    //       queryClient.invalidateQueries(["Products"]);
+    //       navigate(`/products/${data?.id}`);
+    //     },
+    //   });
+    // }
   };
 
   return (
