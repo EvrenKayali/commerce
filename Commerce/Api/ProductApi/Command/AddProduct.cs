@@ -1,3 +1,4 @@
+using AutoMapper;
 using Commerce.Api.BaseResponses;
 using Commerce.Data;
 using Commerce.Data.Entites;
@@ -18,13 +19,13 @@ public static class AddProduct
     public class Handler : IRequestHandler<Request, Response>
     {
         private readonly IStorageService _storage;
-
         private readonly CommerceDbContext _db;
-
-        public Handler(CommerceDbContext db, IStorageService storage)
+        private readonly IMapper _mapper;
+        public Handler(CommerceDbContext db, IStorageService storage, IMapper mapper)
         {
             _db = db;
             _storage = storage;
+            _mapper = mapper;
         }
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
@@ -39,17 +40,8 @@ public static class AddProduct
                     Order = img.Order
                 }).ToList();
 
-
-
-            var product = new Product
-            {
-                Title = request.Title!,
-                Description = request.Description!,
-                Slug = request.Slug,
-                Images = productImages,
-                Options = request.Options?.Select(o => new Data.Entites.ProductOption { Name = o.Name, Values = string.Join(",", o.Values) }).ToList(),
-                Variants = request.Variants?.Select(v => new ProductVariant { Name = v.Name, Key = v.Key, ImgSrc = v.ImgSrc }).ToList()
-            };
+            var product = _mapper.Map<Product>(request);
+            product.Images = productImages;
 
             await _db.Products.AddAsync(product, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);
