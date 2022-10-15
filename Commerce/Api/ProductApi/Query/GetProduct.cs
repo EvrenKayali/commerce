@@ -1,3 +1,5 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Commerce.Api.BaseResponses;
 using Commerce.Data;
 using MediatR;
@@ -14,10 +16,12 @@ public static class GetProduct
     public class Handler : IRequestHandler<Request, ProductFormModel>
     {
         private readonly CommerceDbContext _db;
+        private readonly IMapper _mapper;
 
-        public Handler(CommerceDbContext db)
+        public Handler(CommerceDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         public async Task<ProductFormModel> Handle(Request request, CancellationToken cancellationToken)
@@ -26,7 +30,9 @@ public static class GetProduct
                 .Include(p => p.Images)
                 .Include(p => p.Options)
                 .Include(p => p.Variants)
-                .FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
+                .Where(p => p.Id == request.ProductId)
+                .ProjectTo<ProductFormModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
 
             product = product ?? throw new Exception($"product cannot be found. ProductId: {request.ProductId}");
 
@@ -37,16 +43,9 @@ public static class GetProduct
                 .Select(p => new ProductImageBase { Id = p.Id, Src = $"{srcPrefix}/{p.Folder}/{p.FileName}", FileName = p.FileName })
                 .ToList();
 
-            return new ProductFormModel
-            {
-                Id = product.Id,
-                Title = product.Title,
-                Description = product.Description,
-                Slug = product.Slug,
-                Images = images,
-                Options = product.Options?.Select(o => new ProductOption { Name = o.Name, Values = o.Values.Split(",") }).ToList(),
-                Variants = product.Variants?.Select(v => new Variant { Id = v.Id, Name = v.Name, ImgSrc = v.ImgSrc, Key = v.Key }).ToList()
-            };
+            product.Images = images;
+
+            return product;
         }
     }
 }
