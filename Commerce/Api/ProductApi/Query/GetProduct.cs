@@ -26,24 +26,18 @@ public static class GetProduct
 
         public async Task<ProductFormModel> Handle(Request request, CancellationToken cancellationToken)
         {
+
+            var srcPrefix = "http://127.0.0.1:10000/devstoreaccount1/products";
             var product = await _db.Products
                 .Include(p => p.Images)
                 .Include(p => p.Options)
                 .Include(p => p.Variants)
                 .Where(p => p.Id == request.ProductId)
-                .ProjectTo<ProductFormModel>(_mapper.ConfigurationProvider)
+                .ProjectTo<ProductFormModel>(_mapper.ConfigurationProvider, new { prefix = srcPrefix })
                 .FirstOrDefaultAsync(cancellationToken);
 
+
             product = product ?? throw new Exception($"product cannot be found. ProductId: {request.ProductId}");
-
-            var srcPrefix = "http://127.0.0.1:10000/devstoreaccount1/products";
-
-            var images = product.Images?
-                .OrderBy(img => img.Order)
-                .Select(p => new ProductImageBase { Id = p.Id, Src = $"{srcPrefix}/{p.Folder}/{p.FileName}", FileName = p.FileName })
-                .ToList();
-
-            product.Images = images;
 
             return product;
         }

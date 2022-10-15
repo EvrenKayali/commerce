@@ -18,7 +18,7 @@ public record Variant
     public long Id { get; set; }
     public string Name { get; set; } = null!;
     public string Key { get; set; } = null!;
-    public string? ImgSrc { get; set; }
+    public string? ImageSrc { get; set; }
     public List<VariantAttribute>? Attributes { get; set; }
 }
 

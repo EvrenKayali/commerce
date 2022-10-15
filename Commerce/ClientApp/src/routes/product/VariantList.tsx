@@ -14,6 +14,7 @@ export function VariantList({
   onVariantImageClick,
   onSelectionChange,
 }: props) {
+  console.log(items);
   return (
     <>
       {items.map((item) => (

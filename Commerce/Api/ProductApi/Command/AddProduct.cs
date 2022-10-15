@@ -32,16 +32,7 @@ public static class AddProduct
             if (request.ImageFiles?.Length > 0)
                 await _storage.UploadBatchAsync(request.Slug!, request.ImageFiles, cancellationToken);
 
-            var productImages = request.Images?
-                .Select(img => new ProductImage
-                {
-                    FileName = img.FileName,
-                    Folder = request.Slug!,
-                    Order = img.Order
-                }).ToList();
-
-            var product = _mapper.Map<Product>(request);
-            product.Images = productImages;
+            var product = _mapper.Map<Product>(request, opts => opts.Items["folder"] = request.Slug);
 
             await _db.Products.AddAsync(product, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);

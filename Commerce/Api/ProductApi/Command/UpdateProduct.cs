@@ -30,24 +30,15 @@ public static class UpdateProduct
             var product = _db.Products
                 .Include(p => p.Images)
                 .Include(p => p.Options)
-                .Include(p => p.Variants)
+                .Include(p => p.Variants!)
+                .ThenInclude(v => v.Attributes)
                 .FirstOrDefault(p => p.Id == request.Id);
 
             product = product ?? throw new Exception($"product cannot be found. ProductId: {request.Id}");
 
             await ProcessImages(product, request, cancellationToken);
 
-            var productImages = request.Images != null ? request.Images
-                .Select(img => new ProductImage
-                {
-                    FileName = img.FileName,
-                    Folder = request.Slug,
-                    Order = img.Order
-                }).ToList() : new List<ProductImage>();
-
-
-            _mapper.Map(request, product);
-            product.Images = productImages;
+            _mapper.Map(request, product, opts => opts.Items["folder"] = request.Slug);
 
             await _db.SaveChangesAsync(cancellationToken);
 

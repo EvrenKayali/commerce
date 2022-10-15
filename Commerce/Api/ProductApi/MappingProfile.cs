@@ -11,9 +11,15 @@ public class MappingProfile : Profile
         CreateMap<Product, ProductBaseModel>();
 
         CreateMap<ProductFormModel, Product>()
-            .ForMember(m => m.Images, s => s.Ignore())
-            .ReverseMap()
-            .ForPath(p => p.Images, s => s.Ignore());
+            .ReverseMap();
+
+        string? prefix = null;
+
+        CreateProjection<ProductImage, ProductImageBase>()
+            .ForMember(m => m.Src, opt => opt.MapFrom(src => $"{prefix}/{src.Folder}/{src.FileName}"));
+
+        CreateMap<ProductImageBase, ProductImage>()
+            .ForMember(m => m.Folder, s => s.MapFrom((s, d, _, context) => context.Items["folder"]));
 
         CreateMap<BaseResponses.ProductOption, Data.Entites.ProductOption>()
             .ForMember(m => m.Values, src => src.MapFrom(p => string.Join(",", p.Values)))
@@ -21,9 +27,9 @@ public class MappingProfile : Profile
             .ForMember(m => m.Values, src => src.MapFrom(p => p.Values.Split(",", StringSplitOptions.None)));
 
         CreateMap<Variant, ProductVariant>()
-        .ReverseMap();
+            .ReverseMap();
 
         CreateMap<BaseResponses.VariantAttribute, Data.Entites.VariantAttribute>()
-        .ReverseMap();
+            .ReverseMap();
     }
 }
