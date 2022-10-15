@@ -31,5 +31,8 @@ public class MappingProfile : Profile
 
         CreateMap<BaseResponses.VariantAttribute, Data.Entites.VariantAttribute>()
             .ReverseMap();
+
+        CreateProjection<Product, ProductBaseModel>()
+            .ForMember(m => m.MainImageSrc, src => src.MapFrom(s => s.Images != null ? $"{prefix}/{s.Images.First().Folder}/{s.Images.First().FileName}" : null));
     }
 }

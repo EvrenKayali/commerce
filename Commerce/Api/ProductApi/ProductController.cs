@@ -17,7 +17,7 @@ public class ProductController : ControllerBase
 
 
     [HttpGet("/products")]
-    public async Task<ActionResult<List<GetProducts.Response>>> GetProducts(CancellationToken cancellationToken)
+    public async Task<ActionResult<List<ProductBaseModel>>> GetProducts(CancellationToken cancellationToken)
     {
         return Ok(await _mediator.Send(new GetProducts.Request(), cancellationToken));
     }

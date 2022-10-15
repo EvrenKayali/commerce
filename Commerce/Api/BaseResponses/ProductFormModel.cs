@@ -28,6 +28,7 @@ public record ProductBaseModel
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public string Slug { get; set; } = null!;
+    public string? MainImageSrc { get; set; }
 }
 
 public record ProductFormModel : ProductBaseModel
