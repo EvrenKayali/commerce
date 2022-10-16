@@ -8,12 +8,15 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        string? prefix = null;
+
         CreateMap<Product, ProductBaseModel>();
 
         CreateMap<ProductFormModel, Product>()
             .ReverseMap();
 
-        string? prefix = null;
+        CreateProjection<Product, ProductFormModel>()
+            .ForMember(m => m.Images, src => src.MapFrom(s => s.Images!.OrderBy(i => i.Order)));
 
         CreateProjection<ProductImage, ProductImageBase>()
             .ForMember(m => m.Src, opt => opt.MapFrom(src => $"{prefix}/{src.Folder}/{src.FileName}"));
@@ -33,6 +36,8 @@ public class MappingProfile : Profile
             .ReverseMap();
 
         CreateProjection<Product, ProductBaseModel>()
-            .ForMember(m => m.MainImageSrc, src => src.MapFrom(s => s.Images != null ? $"{prefix}/{s.Images.First().Folder}/{s.Images.First().FileName}" : null));
+            .ForMember(m => m.MainImageSrc, src => src.MapFrom(s => s.Images != null
+                ? s.Images.OrderBy(i => i.Order).Select(img => $"{prefix}/{img.Folder}/{img.FileName}").First()
+                : null));
     }
 }

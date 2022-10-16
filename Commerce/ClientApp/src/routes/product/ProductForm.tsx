@@ -55,7 +55,6 @@ export function ProductForm({ formData, header, productId }: props) {
     useUpdateProductMutation();
 
   const onSubmit = async (data: ProductFormModel) => {
-    console.log(data);
     data.images = data.images?.map((i) => ({ ...i, id: i.isNew ? 0 : i.id }));
     const formData = serialize(data, {
       noFilesWithArrayNotation: true,

@@ -28,6 +28,7 @@ public static class GetProduct
         {
 
             var srcPrefix = "http://127.0.0.1:10000/devstoreaccount1/products";
+
             var product = await _db.Products
                 .Include(p => p.Images)
                 .Include(p => p.Options)

@@ -44,6 +44,7 @@ export default function Images({ images, onChange }: props) {
         ...i,
         order: idx,
       }));
+
       onChange(imgs, [...files, ...acceptedFiles]);
     }
   }
