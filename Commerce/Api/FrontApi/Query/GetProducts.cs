@@ -2,6 +2,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Commerce.Api.BaseResponses;
 using Commerce.Data;
+using Commerce.Data.Entites;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,7 @@ public static class GetProducts
             var srcPrefix = "http://127.0.0.1:10000/devstoreaccount1/products";
 
             return await _db.Products.Include(p => p.Images)
+                .Where(p => p.Status == ProductStatus.Active)
                 .ProjectTo<ProductBaseModel>(_mapper.ConfigurationProvider, new { prefix = srcPrefix })
                 .ToListAsync(cancellationToken);
         }

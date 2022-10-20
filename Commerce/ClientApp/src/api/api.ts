@@ -19,6 +19,7 @@ export interface Product {
   slug: string;
   mainImageSrc?: string;
   images?: Image[];
+  status: string;
 }
 
 export interface ProductFormModel {

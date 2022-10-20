@@ -1,3 +1,5 @@
+using Commerce.Data.Entites;
+
 namespace Commerce.Api.BaseResponses;
 
 public record ProductOption
@@ -29,6 +31,7 @@ public record ProductBaseModel
     public string Description { get; set; } = null!;
     public string Slug { get; set; } = null!;
     public string? MainImageSrc { get; set; }
+    public ProductStatus Status { get; set; }
 }
 
 public record ProductFormModel : ProductBaseModel

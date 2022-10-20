@@ -1,5 +1,6 @@
 using Commerce.Data.Entites;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Commerce.Data.EntityConfigurations;
 
@@ -12,5 +13,7 @@ public class ProductEntityConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasIndex(p => p.Title)
         .IsUnique();
+
+        builder.Property(p => p.Status).HasConversion(new EnumToStringConverter<ProductStatus>());
     }
 }
