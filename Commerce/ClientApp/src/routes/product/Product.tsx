@@ -9,8 +9,6 @@ export const Product: React.FC = () => {
 
   const { data: product } = useProduct({ id: productId });
 
-  console.log(product);
-
   return !productId || product ? (
     <ProductForm
       productId={productId}

@@ -12,6 +12,9 @@ public class Product
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public string Slug { get; set; } = null!;
+    public decimal? Price { get; set; }
+    public decimal? CompareAtPrice { get; set; }
+    public decimal? CostPerItem { get; set; }
     public ProductStatus Status { get; set; } = ProductStatus.Draft;
     public ICollection<ProductImage>? Images { get; set; }
     public ICollection<ProductVariant>? Variants { get; set; }

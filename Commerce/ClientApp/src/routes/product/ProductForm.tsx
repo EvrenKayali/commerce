@@ -18,6 +18,7 @@ import { Status } from "./Status";
 import { Organization } from "./Organization";
 import { VariantsFormPart } from "./Variants";
 import { OptionsFormPart } from "./Options";
+import Pricing from "./Pricing";
 
 interface props {
   productId?: number;
@@ -103,6 +104,7 @@ export function ProductForm({ formData, header, productId }: props) {
                 images={methods.watch("images") || []}
                 onChange={(imgs, files) => handleImageChange(imgs, files)}
               />
+              <Pricing />
               <OptionsFormPart />
               <VariantsFormPart
                 options={methods.watch("options")?.filter((o) => o.name)}

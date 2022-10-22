@@ -31,6 +31,9 @@ export interface ProductFormModel {
   images?: Image[];
   options?: ProductOption[];
   variants?: Variant[];
+  price?: number;
+  compareAtPrice?: number;
+  costPerItem?: number;
 }
 
 export interface Variant {

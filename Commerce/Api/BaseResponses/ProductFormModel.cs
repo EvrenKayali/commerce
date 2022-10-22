@@ -31,6 +31,9 @@ public record ProductBaseModel
     public string Description { get; set; } = null!;
     public string Slug { get; set; } = null!;
     public string? MainImageSrc { get; set; }
+    public decimal? Price { get; set; }
+    public decimal? CompareAtPrice { get; set; }
+    public decimal? CostPerItem { get; set; }
     public ProductStatus Status { get; set; }
 }
 
