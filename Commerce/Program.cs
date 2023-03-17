@@ -51,6 +51,7 @@ builder.Services.AddAuthentication(options =>
     options.Authority = $"http://localhost:8080/realms/Commerce";
     options.UsePkce = true;
     options.ClientId = "commerce";
+    options.ClientSecret = "50xe2tsBMfOvqK7V5YOwgLjhNySFJ4KZ";
     options.RequireHttpsMetadata = false;
     options.ResponseType = OpenIdConnectResponseType.Code;
     options.CallbackPath = new PathString("/callback");
