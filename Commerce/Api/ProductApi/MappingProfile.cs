@@ -37,7 +37,7 @@ public class MappingProfile : Profile
 
         CreateProjection<Product, ProductBaseModel>()
             .ForMember(m => m.MainImageSrc, src => src.MapFrom(s => s.Images != null
-                ? s.Images.OrderBy(i => i.Order).Select(img => $"{prefix}/{img.Folder}/{img.FileName}").First()
+                ? s.Images.OrderBy(i => i.Order).Select(img => $"{prefix}/{img.Folder}/{img.FileName}").FirstOrDefault()
                 : null));
     }
 }

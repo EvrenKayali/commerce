@@ -1,23 +1,13 @@
 import { NoPhotography } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
-import { Link } from "react-router-dom";
-import { useProducts } from "../api/api";
+import { Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Link, useLoaderData } from "react-router-dom";
+import { productLoader } from "../api/api";
 
 export default function Products() {
-  const { status, data: products } = useProducts();
+  // const { status, data: products } = useProducts();
+
+ const products = useLoaderData() as Awaited<ReturnType<typeof productLoader>>;
+
   return (
     <Stack spacing={2}>
       <Typography variant="h5">Products</Typography>
@@ -49,7 +39,7 @@ export default function Products() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {status === "loading" ? (
+              {/* {status === "loading" ? (
                 <TableRow>
                   <TableCell colSpan={10}>
                     <Box
@@ -62,7 +52,7 @@ export default function Products() {
                     </Box>
                   </TableCell>
                 </TableRow>
-              ) : (
+              ) : ( */}
                 <>
                   {products?.map((p) => (
                     <TableRow key={p.id}>
@@ -98,7 +88,7 @@ export default function Products() {
                     </TableRow>
                   ))}
                 </>
-              )}
+              {/* )} */}
             </TableBody>
           </Table>
         </TableContainer>

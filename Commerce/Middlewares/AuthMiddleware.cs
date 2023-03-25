@@ -11,7 +11,7 @@ public class AuthMiddleware : IMiddleware
         {
             // await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             var returnUri = context.Request.Query["returnURL"].ToString();
-            await context.ChallengeAsync("keycloak", new AuthenticationProperties() { RedirectUri = returnUri });
+           // await context.ChallengeAsync("keycloak", new AuthenticationProperties() { RedirectUri = returnUri });
             return;
         }
 

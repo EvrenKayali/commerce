@@ -24,7 +24,7 @@ export default function NavBar() {
       }}
     >
       <ListItem disablePadding>
-        <ListItemButton component={NavLink} to="/home" sx={linkStyles}>
+        <ListItemButton component={NavLink} to="/" sx={linkStyles}>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
